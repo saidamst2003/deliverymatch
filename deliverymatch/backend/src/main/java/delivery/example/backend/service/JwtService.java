@@ -1,9 +1,11 @@
 package delivery.example.backend.service;
 
+import delivery.example.backend.dto.AuthUserDTO;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.KeyGenerator;
@@ -50,6 +52,40 @@ public class JwtService {
                 .getPayload();
 
     }
+
+    public boolean validateToken(String token, UserDetails userDetails) {
+        final String username = extarctUsername(token);
+
+        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+    }
+
+    public boolean isTokenExpired( String token ) {
+        return extractExpiration(token).before(new Date());
+    }
+
+    private Date extractExpiration(String token) {
+        return extarctClaims(token, Claims::getExpiration);
+    }
+
+    public String generateJwtToken (AuthUserDTO authUserDTO) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("id", authUserDTO.id());
+        claims.put("firstName", authUserDTO.fullName());
+        claims.put("email", authUserDTO.email());
+       // claims.put("role", authUserDTO.role());
+
+        return Jwts.builder()
+                .claims()
+                .add(claims)
+                .subject(authUserDTO.email())
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + 60 * 60 * 60 * 40))
+                .and()
+                .signWith(getKeys())
+                .compact();
+
+    }
+
 
 
 }
