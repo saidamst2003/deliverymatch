@@ -72,7 +72,7 @@ public class JwtService {
         claims.put("id", authUserDTO.id());
         claims.put("firstName", authUserDTO.fullName());
         claims.put("email", authUserDTO.email());
-       // claims.put("role", authUserDTO.role());
+        claims.put("role", authUserDTO.role());
 
         return Jwts.builder()
                 .claims()
