@@ -1,8 +1,9 @@
 package delivery.example.backend.controller.auth;
 
-import com.itsupport.backend.dto.RegisterDTO;
-import com.itsupport.backend.model.User;
-import com.itsupport.backend.service.UserService;
+
+import delivery.example.backend.dto.RegisterDTO;
+import delivery.example.backend.model.User;
+import delivery.example.backend.service.UserService;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,7 +23,7 @@ public class RegisterController {
     }
 
     @PostMapping
-    public User register ( RegisterDTO registerDTO ) {
+    public User register (RegisterDTO registerDTO ) {
         return userService.registerUser( registerDTO );
     }
 

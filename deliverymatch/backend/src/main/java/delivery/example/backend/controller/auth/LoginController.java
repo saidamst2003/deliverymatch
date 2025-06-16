@@ -1,8 +1,11 @@
 package delivery.example.backend.controller.auth;
 
-import delivery.example.backend.security.UserService;
+import delivery.example.backend.dto.LoginDTO;
+import delivery.example.backend.model.User;
+import delivery.example.backend.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/user/login")

@@ -9,20 +9,20 @@ public enum Role {
     CONDUCTEUR;
 
     @JsonCreator
-    public static Role fromString (String value) {
-        try {
-            return Role.valueOf(value.toUpperCase());
-        }
-        catch (Exception e) {
+    public static Role fromString(String value) {
+        if (value == null || value.trim().isEmpty()) {
             return null;
         }
+        for (Role role : Role.values()) {
+            if (role.name().equalsIgnoreCase(value.trim())) {
+                return role;
+            }
+        }
+        return null;
     }
 
     @JsonValue
-    public String getValue() {
-        return name();
+    public String toValue() {
+        return this.name();
     }
-
-
-
 }

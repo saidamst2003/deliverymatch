@@ -1,9 +1,9 @@
 package delivery.example.backend.validation;
 
+import delivery.example.backend.model.User;
 import delivery.example.backend.repository.UserRepo;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import org.apache.catalina.User;
 
 public class UniqueEmailValidator implements ConstraintValidator<UniqueEmail, String> {
 

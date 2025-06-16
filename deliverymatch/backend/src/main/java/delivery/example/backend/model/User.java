@@ -1,5 +1,6 @@
 package delivery.example.backend.model;
 
+
 import jakarta.persistence.*;
 
 @Entity
@@ -26,6 +27,10 @@ public class User {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false)
+    private Role role;
 
 
 
@@ -55,5 +60,12 @@ public class User {
         this.password = password;
     }
 
-}
+    public Role getRole() {
+        return role;
+    }
 
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+}

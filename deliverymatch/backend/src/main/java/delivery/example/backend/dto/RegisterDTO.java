@@ -1,7 +1,12 @@
 package delivery.example.backend.dto;
 
 
+import delivery.example.backend.model.Role;
 import delivery.example.backend.validation.UniqueEmail;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotBlank;
 
 public record RegisterDTO(
         @NotBlank(message = "full name is required")

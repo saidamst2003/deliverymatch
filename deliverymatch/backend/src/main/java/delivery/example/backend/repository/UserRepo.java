@@ -1,9 +1,10 @@
 package delivery.example.backend.repository;
 
-import org.apache.catalina.User;
+import delivery.example.backend.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface UserRepo extends JpaRepository<User, Long> {
-
-    public User findUserByEmail(String email);
+    User findUserByEmail(String email);
 }

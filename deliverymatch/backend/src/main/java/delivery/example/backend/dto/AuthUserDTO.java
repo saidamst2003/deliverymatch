@@ -1,6 +1,6 @@
 package delivery.example.backend.dto;
 
-import javax.management.relation.Role;
+import delivery.example.backend.model.Role;
 
 public record AuthUserDTO (
         Long id,
@@ -9,4 +9,3 @@ public record AuthUserDTO (
         Role role
 ) {
 }
-
