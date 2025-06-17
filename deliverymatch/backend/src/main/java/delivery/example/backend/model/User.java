@@ -2,10 +2,10 @@ package delivery.example.backend.model;
 
 
 import jakarta.persistence.*;
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-@DiscriminatorColumn(name = "role")
 @Entity
 @Table(name = "users")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "user_type", discriminatorType = DiscriminatorType.STRING) // Hadchi mohim l SINGLE_TABLE
 public class User {
     // Relations
 

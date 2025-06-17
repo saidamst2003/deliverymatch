@@ -6,9 +6,8 @@ import jakarta.validation.constraints.DecimalMin;
 
 import java.util.List;
 
-@DiscriminatorValue("Conducteur")
+@DiscriminatorValue("CONDUCTEUR")
 @Entity
-@Table(name = "conducteurs")
 
 public class Conducteur extends User {
     @OneToMany(mappedBy = "conducteur", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

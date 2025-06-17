@@ -3,9 +3,8 @@ package delivery.example.backend.model;
 import jakarta.persistence.*;
 
 import java.util.List;
-@DiscriminatorValue("Expeduteur")
+@DiscriminatorValue("EXPEDITEUR")
 @Entity
-@Table(name = "expediteurs")
 
 public class Expediteur  extends User {
 
