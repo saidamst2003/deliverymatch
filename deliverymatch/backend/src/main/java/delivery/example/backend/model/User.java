@@ -2,7 +2,8 @@ package delivery.example.backend.model;
 
 
 import jakarta.persistence.*;
-
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@DiscriminatorColumn(name = "role")
 @Entity
 @Table(name = "users")
 public class User {
