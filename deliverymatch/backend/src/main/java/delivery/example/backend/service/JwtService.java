@@ -3,34 +3,23 @@ package delivery.example.backend.service;
 import delivery.example.backend.dto.AuthUserDTO;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import java.util.function.Function;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import java.util.Map;
-import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
-import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+
+import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Function;
 
 @Service
 public class JwtService {
 
+    @Value("${jwt.secret}")
     private String secretKey;
-
-    public JwtService() {
-        try {
-            KeyGenerator keyGen = KeyGenerator.getInstance("HmacSHA256");
-            keyGen.init(256);
-            SecretKey sk = keyGen.generateKey();
-            secretKey = Base64.getEncoder().encodeToString(sk.getEncoded());
-        } catch (NoSuchAlgorithmException e) {
-            throw new IllegalStateException("HmacSHA256 algorithm not found for JWT secret key generation.", e);
-        }
-    }
 
     private SecretKey getKeys() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
@@ -74,7 +63,7 @@ public class JwtService {
         claims.put("email", authUserDTO.email());
         claims.put("role", authUserDTO.role());
 
-        long expirationTimeMillis = System.currentTimeMillis() + (24 * 60 * 60 * 1000);
+        long expirationTimeMillis = System.currentTimeMillis() + (24 * 60 * 60 * 1000); // 24 hours
 
         return Jwts.builder()
                 .claims()
