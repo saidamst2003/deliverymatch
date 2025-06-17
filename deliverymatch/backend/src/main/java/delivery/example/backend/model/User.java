@@ -2,10 +2,13 @@ package delivery.example.backend.model;
 
 
 import jakarta.persistence.*;
-
 @Entity
 @Table(name = "users")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "user_type", discriminatorType = DiscriminatorType.STRING) // Hadchi mohim l SINGLE_TABLE
 public class User {
+    // Relations
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

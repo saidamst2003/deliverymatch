@@ -1,12 +1,11 @@
 package delivery.example.backend.dto;
 
-
 import delivery.example.backend.model.Role;
 import delivery.example.backend.validation.UniqueEmail;
-import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 public record RegisterDTO(
         @NotBlank(message = "full name is required")
@@ -18,7 +17,7 @@ public record RegisterDTO(
         String email,
 
         @NotBlank(message = "password is required")
-        @Min(value = 6, message = "password must be at least 6 chars")
+        @Size(min = 6, message = "password must be at least 6 characters long")
         String password,
 
         @NotNull(message = "role is required")
