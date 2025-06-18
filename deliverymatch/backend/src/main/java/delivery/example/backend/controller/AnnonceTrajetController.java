@@ -7,7 +7,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,10 +23,9 @@ public class AnnonceTrajetController {
     public AnnonceTrajetController(AnnonceTrajetService annonceTrajetService) {
         this.annonceTrajetService = annonceTrajetService;
     }
-
     @PostMapping("/publier/{conducteurId}")
     public ResponseEntity<?> publierAnnonce(
-            @PathVariable Integer conducteurId,
+            @PathVariable Long conducteurId,  // <-- changer ici Integer -> Long
             @Valid @RequestBody AnnonceTrajetDTO annonceDTO) {
         try {
             AnnonceTrajet nouvelleAnnonce = annonceTrajetService.publierAnnonce(annonceDTO, conducteurId);

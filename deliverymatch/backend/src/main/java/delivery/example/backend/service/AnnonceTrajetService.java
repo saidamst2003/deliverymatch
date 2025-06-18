@@ -4,9 +4,12 @@ import delivery.example.backend.dto.AnnonceTrajetDTO;
 import delivery.example.backend.model.AnnonceTrajet;
 import delivery.example.backend.model.Conducteur;
 import delivery.example.backend.repository.AnnonceTrajetRepository;
+import delivery.example.backend.repository.ConducteurRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 @Service
 public class AnnonceTrajetService {
@@ -15,14 +18,12 @@ public class AnnonceTrajetService {
     private final ConducteurRepository conducteurRepository;
 
     @Autowired
-    public AnnonceTrajetService(AnnonceTrajetRepository annonceTrajetRepository,
-                                ConducteurRepository conducteurRepository) {
+    public AnnonceTrajetService(AnnonceTrajetRepository annonceTrajetRepository, ConducteurRepository conducteurRepository) {
         this.annonceTrajetRepository = annonceTrajetRepository;
         this.conducteurRepository = conducteurRepository;
     }
 
-    public AnnonceTrajet publierAnnonce(AnnonceTrajetDTO annonceDTO, Integer conducteurId) {
-        // Vérifier que le conducteur existe
+    public AnnonceTrajet publierAnnonce(AnnonceTrajetDTO annonceDTO, Long conducteurId) {
         Optional<Conducteur> conducteurOpt = conducteurRepository.findById(conducteurId);
         if (conducteurOpt.isEmpty()) {
             throw new RuntimeException("Conducteur introuvable avec l'ID : " + conducteurId);
@@ -30,7 +31,6 @@ public class AnnonceTrajetService {
 
         Conducteur conducteur = conducteurOpt.get();
 
-        // Créer la nouvelle annonce
         AnnonceTrajet annonce = new AnnonceTrajet();
         annonce.setLieuDepart(annonceDTO.lieuDepart());
         annonce.setDestination(annonceDTO.destination());
@@ -42,5 +42,6 @@ public class AnnonceTrajetService {
 
         return annonceTrajetRepository.save(annonce);
     }
+
 
 }

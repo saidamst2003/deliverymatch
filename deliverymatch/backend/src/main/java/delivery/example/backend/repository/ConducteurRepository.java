@@ -9,7 +9,6 @@ import java.util.Optional;
 @Repository
 public interface ConducteurRepository extends JpaRepository<Conducteur, Long> {
 
-    // Exemple : chercher un conducteur par email (utile pour l'authentification)
     Optional<Conducteur> findByEmail(String email);
 
 }
