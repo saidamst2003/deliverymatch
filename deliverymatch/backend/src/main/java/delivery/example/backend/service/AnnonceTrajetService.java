@@ -3,12 +3,14 @@ package delivery.example.backend.service;
 import delivery.example.backend.dto.AnnonceTrajetDTO;
 import delivery.example.backend.model.AnnonceTrajet;
 import delivery.example.backend.model.Conducteur;
+import delivery.example.backend.model.TypeMarchandise;
 import delivery.example.backend.repository.AnnonceTrajetRepository;
 import delivery.example.backend.repository.ConducteurRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -43,5 +45,11 @@ public class AnnonceTrajetService {
         return annonceTrajetRepository.save(annonce);
     }
 
+   //recherche
+
+
+    public List<AnnonceTrajet> chercherAnnonces(String destination, LocalDate dateCreation, TypeMarchandise typeMarchandise) {
+        return annonceTrajetRepository.findByCriteria(destination, dateCreation, typeMarchandise);
+    }
 
 }
