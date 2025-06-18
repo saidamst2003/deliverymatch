@@ -1,4 +1,4 @@
-package delivery.example.backend.controller.auth;
+package delivery.example.backend.controller;
 
 import delivery.example.backend.dto.RegisterDTO;
 import delivery.example.backend.model.User;

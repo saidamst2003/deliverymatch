@@ -9,27 +9,38 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 
 @Service
-
 public class AnnonceTrajetService {
 
     private final AnnonceTrajetRepository annonceTrajetRepository;
+    private final ConducteurRepository conducteurRepository;
 
-    public AnnonceTrajetService(AnnonceTrajetRepository annonceTrajetRepository) {
+    @Autowired
+    public AnnonceTrajetService(AnnonceTrajetRepository annonceTrajetRepository,
+                                ConducteurRepository conducteurRepository) {
         this.annonceTrajetRepository = annonceTrajetRepository;
+        this.conducteurRepository = conducteurRepository;
     }
-    public AnnonceTrajet createAnnonceTrajet(AnnonceTrajetDTO dto, Conducteur conducteur) {
+
+    public AnnonceTrajet publierAnnonce(AnnonceTrajetDTO annonceDTO, Integer conducteurId) {
+        // Vérifier que le conducteur existe
+        Optional<Conducteur> conducteurOpt = conducteurRepository.findById(conducteurId);
+        if (conducteurOpt.isEmpty()) {
+            throw new RuntimeException("Conducteur introuvable avec l'ID : " + conducteurId);
+        }
+
+        Conducteur conducteur = conducteurOpt.get();
+
+        // Créer la nouvelle annonce
         AnnonceTrajet annonce = new AnnonceTrajet();
-
-        annonce.setLieuDepart(dto.lieuDepart());
-        annonce.setEtapesIntermediaires(dto.etapesIntermediaires());
-        annonce.setDestination(dto.destination());
-        annonce.setCapaciteDisponible(dto.capaciteDisponible());
-        annonce.setTypeMarchandiseAcceptee(dto.typeMarchandiseAcceptee());
-
-        annonce.setDateCreation(LocalDate.now());  // date du jour
-
+        annonce.setLieuDepart(annonceDTO.lieuDepart());
+        annonce.setDestination(annonceDTO.destination());
+        annonce.setEtapesIntermediaires(annonceDTO.etapesIntermediaires());
+        annonce.setCapaciteDisponible(annonceDTO.capaciteDisponible());
+        annonce.setTypeMarchandiseAcceptee(annonceDTO.typeMarchandiseAcceptee());
+        annonce.setDateCreation(LocalDate.now());
         annonce.setConducteur(conducteur);
 
         return annonceTrajetRepository.save(annonce);
     }
+
 }
