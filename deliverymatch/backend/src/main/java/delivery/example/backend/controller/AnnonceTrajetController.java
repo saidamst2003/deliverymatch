@@ -45,6 +45,13 @@ public class AnnonceTrajetController {
 
         List<AnnonceTrajet> resultats = annonceTrajetService.chercherAnnonces(destination, dateCreation, typeMarchandise);
         return ResponseEntity.ok(resultats);
-    }
 
+    }
+    //find all annonce by conducteur
+
+    @GetMapping("/admin/annonces-conducteurs")
+    public ResponseEntity<List<AnnonceTrajet>> getAllAnnoncesConducteurs() {
+        List<AnnonceTrajet> annonces = annonceTrajetService.getAllAnnoncesConducteurs();
+        return ResponseEntity.ok(annonces);
+    }
 }
