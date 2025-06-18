@@ -46,9 +46,7 @@ public class AnnonceTrajetService {
     }
 
    //recherche
-    public AnnonceTrajetService(AnnonceTrajetRepository annonceTrajetRepository) {
-        this.annonceTrajetRepository = annonceTrajetRepository;
-    }
+
 
     public List<AnnonceTrajet> chercherAnnonces(String destination, LocalDate dateCreation, TypeMarchandise typeMarchandise) {
         return annonceTrajetRepository.findByCriteria(destination, dateCreation, typeMarchandise);
