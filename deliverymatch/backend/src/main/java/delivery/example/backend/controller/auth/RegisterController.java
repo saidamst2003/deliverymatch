@@ -6,11 +6,7 @@ import delivery.example.backend.service.Authservice;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/user/register")
@@ -23,9 +19,9 @@ public class RegisterController {
         this.authService = authService;
     }
 
-    @PostMapping
-    public ResponseEntity<User> register(@Valid @RequestBody RegisterDTO registerDTO) {
-        User registeredUser = authService.registerUser(registerDTO);
+    @PostMapping("/{role}")
+    public ResponseEntity<User> register(@Valid @RequestBody RegisterDTO registerDTO, @PathVariable String role) {
+        User registeredUser = authService.registerUser(registerDTO, role);
         return new ResponseEntity<>(registeredUser, HttpStatus.CREATED);
     }
 }

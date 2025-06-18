@@ -1,8 +1,7 @@
 package delivery.example.backend.service;
 
 import delivery.example.backend.dto.RegisterDTO;
-import delivery.example.backend.model.Role;
-import delivery.example.backend.model.User;
+import delivery.example.backend.model.*;
 import delivery.example.backend.repository.UserRepo;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,12 +17,22 @@ public class Authservice {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public User registerUser(RegisterDTO registerDTO) {
-        User newUser = new User();
+    public User registerUser(RegisterDTO registerDTO, String role) {
+        User newUser;
+        if(role.equals("admin")) {
+             newUser = new Administrateur();
+            //newUser.setRole(Role.ADMIN);
+        } else if (role.equals("conducteur")) {
+             newUser = new Conducteur();
+            //newUser.setRole(Role.CONDUCTEUR);
+        } else {
+             newUser = new Expediteur();
+            //newUser.setRole(Role.EXPEDITEUR);
+        }
         newUser.setFullName(registerDTO.fullName());
         newUser.setEmail(registerDTO.email());
         newUser.setPassword(passwordEncoder.encode(registerDTO.password()));
-        newUser.setRole(registerDTO.role());
+
 
         return userRepository.save(newUser);
     }

@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "users")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "user_type", discriminatorType = DiscriminatorType.STRING) // Hadchi mohim l SINGLE_TABLE
+@DiscriminatorColumn(name = "role", discriminatorType = DiscriminatorType.STRING) // Hadchi mohim l SINGLE_TABLE
 public class User {
     // Relations
 
@@ -31,9 +31,9 @@ public class User {
         this.email = email;
     }
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "role", nullable = false)
-    private Role role;
+//    @Enumerated(EnumType.STRING)
+//    @Column(name = "role", nullable = false)
+//    private Role role;
 
 
 
@@ -63,12 +63,12 @@ public class User {
         this.password = password;
     }
 
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
+//    public Role getRole() {
+//        return role;
+//    }
+//
+//    public void setRole(Role role) {
+//        this.role = role;
+//    }
 
 }

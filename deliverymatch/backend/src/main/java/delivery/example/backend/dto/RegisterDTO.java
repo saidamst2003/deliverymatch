@@ -18,9 +18,6 @@ public record RegisterDTO(
 
         @NotBlank(message = "password is required")
         @Size(min = 6, message = "password must be at least 6 characters long")
-        String password,
-
-        @NotNull(message = "role is required")
-        Role role
+        String password
 ) {
 }

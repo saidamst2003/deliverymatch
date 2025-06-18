@@ -53,7 +53,7 @@ public class UserService {
         newUser.setFullName(registerDTO.fullName());
         newUser.setEmail(registerDTO.email());
         newUser.setPassword(encryptedPassword);
-        newUser.setRole(registerDTO.role());
+        //newUser.setRole(registerDTO.role());
 
         return userRepository.save(newUser);
     }
