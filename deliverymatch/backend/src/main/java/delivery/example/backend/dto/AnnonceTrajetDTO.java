@@ -1,5 +1,4 @@
 package delivery.example.backend.dto;
-package delivery.example.backend.dto;
 
 import delivery.example.backend.model.TypeMarchandise;
 
