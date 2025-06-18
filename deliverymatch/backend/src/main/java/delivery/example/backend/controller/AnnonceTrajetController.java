@@ -54,4 +54,14 @@ public class AnnonceTrajetController {
         List<AnnonceTrajet> annonces = annonceTrajetService.getAllAnnoncesConducteurs();
         return ResponseEntity.ok(annonces);
     }
+
+//    Modifier une annonce
+
+    @PutMapping("/admin/annonces-conducteurs/{id}")
+    public ResponseEntity<AnnonceTrajet> updateAnnonce(
+            @PathVariable Integer id,
+            @RequestBody AnnonceTrajet updatedAnnonce) {
+        AnnonceTrajet annonce = annonceTrajetService.updateAnnonce(id, updatedAnnonce);
+        return ResponseEntity.ok(annonce);
+    }
 }
