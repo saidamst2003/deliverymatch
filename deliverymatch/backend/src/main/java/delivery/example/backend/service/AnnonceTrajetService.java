@@ -46,10 +46,13 @@ public class AnnonceTrajetService {
     }
 
    //recherche
-
-
     public List<AnnonceTrajet> chercherAnnonces(String destination, LocalDate dateCreation, TypeMarchandise typeMarchandise) {
         return annonceTrajetRepository.findByCriteria(destination, dateCreation, typeMarchandise);
+    }
+
+    //find all annonce by conducteur
+    public List<AnnonceTrajet> getAllAnnoncesConducteurs() {
+        return annonceTrajetRepository.findAllByConducteurIsNotNull();
     }
 
 }
