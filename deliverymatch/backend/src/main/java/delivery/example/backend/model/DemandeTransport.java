@@ -42,4 +42,60 @@ public class DemandeTransport {
 
     @OneToMany(mappedBy = "demandeTransport", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Colis> colis;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public @Positive(message = "Le poids doit être positif") Double getPoidsColis() {
+        return poidsColis;
+    }
+
+    public void setPoidsColis(@Positive(message = "Le poids doit être positif") Double poidsColis) {
+        this.poidsColis = poidsColis;
+    }
+
+    public StatusDemande getStatut() {
+        return statut;
+    }
+
+    public void setStatut(StatusDemande statut) {
+        this.statut = statut;
+    }
+
+    public @NotNull(message = "La date de demande est obligatoire") LocalDate getDateDemande() {
+        return dateDemande;
+    }
+
+    public void setDateDemande(@NotNull(message = "La date de demande est obligatoire") LocalDate dateDemande) {
+        this.dateDemande = dateDemande;
+    }
+
+    public Expediteur getExpediteur() {
+        return expediteur;
+    }
+
+    public void setExpediteur(Expediteur expediteur) {
+        this.expediteur = expediteur;
+    }
+
+    public AnnonceTrajet getAnnonceTrajet() {
+        return annonceTrajet;
+    }
+
+    public void setAnnonceTrajet(AnnonceTrajet annonceTrajet) {
+        this.annonceTrajet = annonceTrajet;
+    }
+
+    public List<Colis> getColis() {
+        return colis;
+    }
+
+    public void setColis(List<Colis> colis) {
+        this.colis = colis;
+    }
 }

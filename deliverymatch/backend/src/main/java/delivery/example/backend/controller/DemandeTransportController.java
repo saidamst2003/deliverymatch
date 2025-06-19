@@ -1,0 +1,24 @@
+package delivery.example.backend.controller;
+
+import delivery.example.backend.model.DemandeTransport;
+import delivery.example.backend.service.DemandeTransportService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/demandes")
+public class DemandeTransportController {
+
+    @Autowired
+    private DemandeTransportService demandeService;
+
+    @PostMapping
+    public ResponseEntity<DemandeTransport> createDemande(@RequestBody DemandeTransport demande) {
+        DemandeTransport created = demandeService.createDemande(demande);
+        return ResponseEntity.ok(created);
+    }
+
+}
