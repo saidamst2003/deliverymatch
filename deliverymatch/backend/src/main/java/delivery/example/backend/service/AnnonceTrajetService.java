@@ -21,12 +21,14 @@ public class AnnonceTrajetService {
     private final AnnonceTrajetRepository annonceTrajetRepository;
     private final ConducteurRepository conducteurRepository;
 
+    // Constructeur pour l'injection de dépendances
     @Autowired
     public AnnonceTrajetService(AnnonceTrajetRepository annonceTrajetRepository, ConducteurRepository conducteurRepository) {
         this.annonceTrajetRepository = annonceTrajetRepository;
         this.conducteurRepository = conducteurRepository;
     }
 
+    // Publie une nouvelle annonce de trajet en associant un conducteur existant
     public AnnonceTrajet publierAnnonce(AnnonceTrajetDTO annonceDTO, Long conducteurId) {
         Optional<Conducteur> conducteurOpt = conducteurRepository.findById(conducteurId);
         if (conducteurOpt.isEmpty()) {
@@ -47,18 +49,17 @@ public class AnnonceTrajetService {
         return annonceTrajetRepository.save(annonce);
     }
 
-    //recherche
+    // Recherche les annonces de trajet selon des critères (destination, date de création, type de marchandise)
     public List<AnnonceTrajet> chercherAnnonces(String destination, LocalDate dateCreation, TypeMarchandise typeMarchandise) {
         return annonceTrajetRepository.findByCriteria(destination, dateCreation, typeMarchandise);
     }
 
-    //find all annonce by conducteur
+    // Récupère toutes les annonces de trajet associées à un conducteur
     public List<AnnonceTrajet> getAllAnnoncesConducteurs() {
         return annonceTrajetRepository.findAllByConducteurIsNotNull();
     }
 
-    //Modifier une annonce
-
+    // Met à jour les détails d'une annonce de trajet existante par son ID
     public AnnonceTrajet updateAnnonce(Integer id, AnnonceTrajet updatedAnnonce) {
 
         AnnonceTrajet annonce = annonceTrajetRepository.findById(id)
@@ -72,14 +73,13 @@ public class AnnonceTrajetService {
         return annonceTrajetRepository.save(annonce);
     }
 
-    //SUPRISSION ANNONCE
-    // ✅ method to find an annonce by ID
+    // Trouve une annonce de trajet par son ID
     public AnnonceTrajet findById(Integer id) {
         return annonceTrajetRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Annonce non trouvée avec id " + id));
     }
 
-    // ✅ method to delete an annonce by ID
+    // Supprime une annonce de trajet par son ID
     public void delete(Integer id) {
         AnnonceTrajet annonce = findById(id);
         annonceTrajetRepository.delete(annonce);

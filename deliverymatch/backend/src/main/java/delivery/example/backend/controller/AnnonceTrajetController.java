@@ -23,13 +23,16 @@ public class AnnonceTrajetController {
 
     private final AnnonceTrajetService annonceTrajetService;
 
+    // Constructeur pour l'injection de dépendances
     @Autowired
     public AnnonceTrajetController(AnnonceTrajetService annonceTrajetService) {
         this.annonceTrajetService = annonceTrajetService;
     }
+
+    // Publie une nouvelle annonce de trajet pour un conducteur donné
     @PostMapping("/publier/{conducteurId}")
     public ResponseEntity<?> publierAnnonce(
-            @PathVariable Long conducteurId,  // <-- changer ici Integer -> Long
+            @PathVariable Long conducteurId,
             @Valid @RequestBody AnnonceTrajetDTO annonceDTO) {
         try {
             AnnonceTrajet nouvelleAnnonce = annonceTrajetService.publierAnnonce(annonceDTO, conducteurId);
@@ -38,6 +41,8 @@ public class AnnonceTrajetController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
+
+    // Cherche des annonces de trajet selon des critères (destination, date, type de marchandise)
     @GetMapping("/search")
     public ResponseEntity<List<AnnonceTrajet>> chercherAnnonces(
             @RequestParam(required = false) String destination,
@@ -46,18 +51,16 @@ public class AnnonceTrajetController {
 
         List<AnnonceTrajet> resultats = annonceTrajetService.chercherAnnonces(destination, dateCreation, typeMarchandise);
         return ResponseEntity.ok(resultats);
-
     }
-    //find all annonce by conducteur
 
+    // Récupère toutes les annonces de trajet pour les conducteurs (accès admin)
     @GetMapping("/admin/annonces-conducteurs")
     public ResponseEntity<List<AnnonceTrajet>> getAllAnnoncesConducteurs() {
         List<AnnonceTrajet> annonces = annonceTrajetService.getAllAnnoncesConducteurs();
         return ResponseEntity.ok(annonces);
     }
 
-//    Modifier une annonce
-
+    // Modifie une annonce de trajet existante (accès admin)
     @PutMapping("/admin/annonces-conducteurs/{id}")
     public ResponseEntity<AnnonceTrajet> updateAnnonce(
             @PathVariable Integer id,
@@ -65,12 +68,11 @@ public class AnnonceTrajetController {
         AnnonceTrajet annonce = annonceTrajetService.updateAnnonce(id, updatedAnnonce);
         return ResponseEntity.ok(annonce);
     }
-//supprission d'un annonce
-@DeleteMapping("/admin/annonces-conducteurs/{id}")
-public ResponseEntity<?> deleteAnnonce(@PathVariable Integer id) {
-    annonceTrajetService.delete(id);
-    return ResponseEntity.noContent().build(); // 204 No Content
-}
 
-
+    // Supprime une annonce de trajet par son ID (accès admin)
+    @DeleteMapping("/admin/annonces-conducteurs/{id}")
+    public ResponseEntity<?> deleteAnnonce(@PathVariable Integer id) {
+        annonceTrajetService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
 }
