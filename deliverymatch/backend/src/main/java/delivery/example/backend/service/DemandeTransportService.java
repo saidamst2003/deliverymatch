@@ -51,4 +51,10 @@ public class DemandeTransportService{
 
 
 
+    public DemandeTransport getDemandeById(Integer id) {
+        return demandeTransportRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Demande non trouvée avec id " + id));
+    }
+
+
 }

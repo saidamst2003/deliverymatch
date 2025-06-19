@@ -28,4 +28,9 @@ public ResponseEntity<List<DemandeTransport>> getDemandesByExpediteur(@PathVaria
 }
 
 
+    @GetMapping("/{id}")
+    public ResponseEntity<DemandeTransport> getDemandeById(@PathVariable Integer id) {
+        DemandeTransport demande = demandeService.getDemandeById(id);
+        return ResponseEntity.ok(demande);
+    }
 }
