@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @RestController
@@ -45,6 +46,31 @@ public class AnnonceTrajetController {
 
         List<AnnonceTrajet> resultats = annonceTrajetService.chercherAnnonces(destination, dateCreation, typeMarchandise);
         return ResponseEntity.ok(resultats);
+
     }
+    //find all annonce by conducteur
+
+    @GetMapping("/admin/annonces-conducteurs")
+    public ResponseEntity<List<AnnonceTrajet>> getAllAnnoncesConducteurs() {
+        List<AnnonceTrajet> annonces = annonceTrajetService.getAllAnnoncesConducteurs();
+        return ResponseEntity.ok(annonces);
+    }
+
+//    Modifier une annonce
+
+    @PutMapping("/admin/annonces-conducteurs/{id}")
+    public ResponseEntity<AnnonceTrajet> updateAnnonce(
+            @PathVariable Integer id,
+            @RequestBody AnnonceTrajet updatedAnnonce) {
+        AnnonceTrajet annonce = annonceTrajetService.updateAnnonce(id, updatedAnnonce);
+        return ResponseEntity.ok(annonce);
+    }
+//supprission d'un annonce
+@DeleteMapping("/admin/annonces-conducteurs/{id}")
+public ResponseEntity<?> deleteAnnonce(@PathVariable Integer id) {
+    annonceTrajetService.delete(id);
+    return ResponseEntity.noContent().build(); // 204 No Content
+}
+
 
 }

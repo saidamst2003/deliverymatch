@@ -18,5 +18,7 @@ public interface AnnonceTrajetRepository extends JpaRepository<AnnonceTrajet, In
     List<AnnonceTrajet> findByCriteria(@Param("destination") String destination,
                                        @Param("dateCreation") LocalDate dateCreation,
                                        @Param("typeMarchandise") TypeMarchandise typeMarchandise);
+//find all annonce by conducteur
+    List<AnnonceTrajet> findAllByConducteurIsNotNull();
 }
 

@@ -1,5 +1,6 @@
 package delivery.example.backend.service;
-
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.http.HttpStatus;
 import delivery.example.backend.dto.AnnonceTrajetDTO;
 import delivery.example.backend.model.AnnonceTrajet;
 import delivery.example.backend.model.Conducteur;
@@ -8,6 +9,7 @@ import delivery.example.backend.repository.AnnonceTrajetRepository;
 import delivery.example.backend.repository.ConducteurRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.util.NoSuchElementException;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -45,11 +47,42 @@ public class AnnonceTrajetService {
         return annonceTrajetRepository.save(annonce);
     }
 
-   //recherche
-
-
+    //recherche
     public List<AnnonceTrajet> chercherAnnonces(String destination, LocalDate dateCreation, TypeMarchandise typeMarchandise) {
         return annonceTrajetRepository.findByCriteria(destination, dateCreation, typeMarchandise);
+    }
+
+    //find all annonce by conducteur
+    public List<AnnonceTrajet> getAllAnnoncesConducteurs() {
+        return annonceTrajetRepository.findAllByConducteurIsNotNull();
+    }
+
+    //Modifier une annonce
+
+    public AnnonceTrajet updateAnnonce(Integer id, AnnonceTrajet updatedAnnonce) {
+
+        AnnonceTrajet annonce = annonceTrajetRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Annonce non trouvée avec id " + id));
+        annonce.setLieuDepart(updatedAnnonce.getLieuDepart());
+        annonce.setDestination(updatedAnnonce.getDestination());
+        annonce.setCapaciteDisponible(updatedAnnonce.getCapaciteDisponible());
+        annonce.setTypeMarchandiseAcceptee(updatedAnnonce.getTypeMarchandiseAcceptee());
+        annonce.setEtapesIntermediaires(updatedAnnonce.getEtapesIntermediaires());
+
+        return annonceTrajetRepository.save(annonce);
+    }
+
+    //SUPRISSION ANNONCE
+    // ✅ method to find an annonce by ID
+    public AnnonceTrajet findById(Integer id) {
+        return annonceTrajetRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Annonce non trouvée avec id " + id));
+    }
+
+    // ✅ method to delete an annonce by ID
+    public void delete(Integer id) {
+        AnnonceTrajet annonce = findById(id);
+        annonceTrajetRepository.delete(annonce);
     }
 
 }
