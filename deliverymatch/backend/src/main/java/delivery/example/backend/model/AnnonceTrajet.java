@@ -2,6 +2,7 @@ package delivery.example.backend.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -54,7 +55,7 @@ public class AnnonceTrajet {
     private Conducteur conducteur;
 
     @OneToMany(mappedBy = "annonceTrajet", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonBackReference
+    @JsonManagedReference("demande-annonce")
     private List<DemandeTransport> demandesTransport;
 
     public Integer getId() {

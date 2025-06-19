@@ -12,27 +12,28 @@ public class Authservice {
     private final UserRepo userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    // Constructeur pour l'injection de dépendances
     public Authservice(UserRepo userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
+    // Enregistre un nouvel utilisateur avec un rôle spécifié
     public User registerUser(RegisterDTO registerDTO, String role) {
         User newUser;
         if(role.equals("admin")) {
-             newUser = new Administrateur();
+            newUser = new Administrateur();
             //newUser.setRole(Role.ADMIN);
         } else if (role.equals("conducteur")) {
-             newUser = new Conducteur();
+            newUser = new Conducteur();
             //newUser.setRole(Role.CONDUCTEUR);
         } else {
-             newUser = new Expediteur();
+            newUser = new Expediteur();
             //newUser.setRole(Role.EXPEDITEUR);
         }
         newUser.setFullName(registerDTO.fullName());
         newUser.setEmail(registerDTO.email());
         newUser.setPassword(passwordEncoder.encode(registerDTO.password()));
-
 
         return userRepository.save(newUser);
     }

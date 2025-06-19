@@ -1,20 +1,14 @@
 package delivery.example.backend.model;
 
-
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Entity
 @Table(name = "demandes_transport")
-
 public class DemandeTransport {
 
     @Id
@@ -25,6 +19,22 @@ public class DemandeTransport {
     @Column(name = "poids_colis", nullable = false)
     private Double poidsColis;
 
+    @Positive(message = "La largeur doit être positive")
+    @Column(name = "largeur_colis", nullable = false)
+    private Double largeurColis;
+
+    @Positive(message = "La longueur doit être positive")
+    @Column(name = "longueur_colis", nullable = false)
+    private Double longueurColis;
+
+    @Positive(message = "La hauteur doit être positive")
+    @Column(name = "hauteur_colis", nullable = false)
+    private Double hauteurColis;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type_colis", nullable = false)
+    private TypeColis typeColis;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "statut", nullable = false)
     private StatusDemande statut = StatusDemande.EN_ATTENTE;
@@ -33,20 +43,17 @@ public class DemandeTransport {
     @Column(name = "date_demande", nullable = false)
     private LocalDate dateDemande;
 
-    // Relations
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonBackReference
     @JoinColumn(name = "expediteur_id", nullable = false)
+    @JsonBackReference("demande-expediteur")
     private Expediteur expediteur;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonBackReference
     @JoinColumn(name = "annonce_trajet_id", nullable = false)
+    @JsonBackReference("demande-annonce")
     private AnnonceTrajet annonceTrajet;
 
-    @OneToMany(mappedBy = "demandeTransport", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonManagedReference
-    private List<Colis> colis;
+    // Getters & Setters
 
     public Integer getId() {
         return id;
@@ -56,12 +63,44 @@ public class DemandeTransport {
         this.id = id;
     }
 
-    public @Positive(message = "Le poids doit être positif") Double getPoidsColis() {
+    public Double getPoidsColis() {
         return poidsColis;
     }
 
-    public void setPoidsColis(@Positive(message = "Le poids doit être positif") Double poidsColis) {
+    public void setPoidsColis(Double poidsColis) {
         this.poidsColis = poidsColis;
+    }
+
+    public Double getLargeurColis(Double aDouble) {
+        return largeurColis;
+    }
+
+    public void setLargeurColis(Double largeurColis) {
+        this.largeurColis = largeurColis;
+    }
+
+    public Double getLongueurColis(Double aDouble) {
+        return longueurColis;
+    }
+
+    public void setLongueurColis(Double longueurColis) {
+        this.longueurColis = longueurColis;
+    }
+
+    public Double getHauteurColis() {
+        return hauteurColis;
+    }
+
+    public void setHauteurColis(Double hauteurColis) {
+        this.hauteurColis = hauteurColis;
+    }
+
+    public TypeColis getTypeColis() {
+        return typeColis;
+    }
+
+    public void setTypeColis(TypeColis typeColis) {
+        this.typeColis = typeColis;
     }
 
     public StatusDemande getStatut() {
@@ -72,11 +111,11 @@ public class DemandeTransport {
         this.statut = statut;
     }
 
-    public @NotNull(message = "La date de demande est obligatoire") LocalDate getDateDemande() {
+    public LocalDate getDateDemande() {
         return dateDemande;
     }
 
-    public void setDateDemande(@NotNull(message = "La date de demande est obligatoire") LocalDate dateDemande) {
+    public void setDateDemande(LocalDate dateDemande) {
         this.dateDemande = dateDemande;
     }
 
@@ -94,13 +133,5 @@ public class DemandeTransport {
 
     public void setAnnonceTrajet(AnnonceTrajet annonceTrajet) {
         this.annonceTrajet = annonceTrajet;
-    }
-
-    public List<Colis> getColis() {
-        return colis;
-    }
-
-    public void setColis(List<Colis> colis) {
-        this.colis = colis;
     }
 }
