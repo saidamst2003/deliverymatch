@@ -2,6 +2,8 @@ package delivery.example.backend.model;
 
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -33,14 +35,17 @@ public class DemandeTransport {
 
     // Relations
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonBackReference
     @JoinColumn(name = "expediteur_id", nullable = false)
     private Expediteur expediteur;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonBackReference
     @JoinColumn(name = "annonce_trajet_id", nullable = false)
     private AnnonceTrajet annonceTrajet;
 
     @OneToMany(mappedBy = "demandeTransport", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<Colis> colis;
 
     public Integer getId() {

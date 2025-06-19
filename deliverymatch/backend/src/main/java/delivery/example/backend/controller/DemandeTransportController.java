@@ -22,15 +22,27 @@ public class DemandeTransportController {
     }
 //get demandes by expiditeur
 @GetMapping("/expediteur/{expediteurId}")
-public ResponseEntity<List<DemandeTransport>> getDemandesByExpediteur(@PathVariable Long expediteurId) {
+public ResponseEntity<List<DemandeTransport>> getDemandesByExpediteur(@PathVariable Integer expediteurId) {
     List<DemandeTransport> demandes = demandeService.getDemandesByExpediteur(expediteurId);
     return ResponseEntity.ok(demandes);
 }
-
+//get demande by Id
 
     @GetMapping("/{id}")
     public ResponseEntity<DemandeTransport> getDemandeById(@PathVariable Integer id) {
         DemandeTransport demande = demandeService.getDemandeById(id);
         return ResponseEntity.ok(demande);
+    }
+//update demande
+@PutMapping("/{id}")
+public ResponseEntity<DemandeTransport> updateDemande(@PathVariable Integer id, @RequestBody DemandeTransport demande) {
+    DemandeTransport updated = demandeService.updateDemande(id, demande);
+    return ResponseEntity.ok(updated);
+}
+//DELETE
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteDemande(@PathVariable Integer id) {
+        demandeService.deleteDemande(id);
+        return ResponseEntity.noContent().build();
     }
 }

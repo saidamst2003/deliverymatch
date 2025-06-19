@@ -44,10 +44,9 @@ public class DemandeTransportService{
         return demandeTransportRepository.save(demande);
     }
 
-    public List<DemandeTransport> getDemandesByExpediteur(Long expediteurId) {
-        return demandeTransportRepository.findByExpediteur_Id(expediteurId);
+    public List<DemandeTransport> getDemandesByExpediteur(Integer expediteurId) {
+        return demandeTransportRepository.findByExpediteur_Id(Long.valueOf(expediteurId));
     }
-
 
 
 
@@ -56,5 +55,23 @@ public class DemandeTransportService{
                 .orElseThrow(() -> new NoSuchElementException("Demande non trouvée avec id " + id));
     }
 
+    public DemandeTransport updateDemande(Integer id, DemandeTransport updatedDemande) {
+        DemandeTransport existing = getDemandeById(id);
 
+        if (updatedDemande.getPoidsColis() != null) {
+            existing.setPoidsColis(updatedDemande.getPoidsColis());
+        }
+
+        if (updatedDemande.getStatut() != null) {
+            existing.setStatut(updatedDemande.getStatut());
+        }
+
+        return demandeTransportRepository.save(existing);
+    }
+
+
+    public void deleteDemande(Integer id) {
+        DemandeTransport existing = getDemandeById(id);
+        demandeTransportRepository.delete(existing);
+    }
 }
