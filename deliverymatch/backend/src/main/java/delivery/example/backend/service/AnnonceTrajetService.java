@@ -9,6 +9,7 @@ import delivery.example.backend.repository.AnnonceTrajetRepository;
 import delivery.example.backend.repository.ConducteurRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.util.NoSuchElementException;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -70,4 +71,18 @@ public class AnnonceTrajetService {
 
         return annonceTrajetRepository.save(annonce);
     }
+
+    //SUPRISSION ANNONCE
+    // ✅ method to find an annonce by ID
+    public AnnonceTrajet findById(Integer id) {
+        return annonceTrajetRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Annonce non trouvée avec id " + id));
     }
+
+    // ✅ method to delete an annonce by ID
+    public void delete(Integer id) {
+        AnnonceTrajet annonce = findById(id);
+        annonceTrajetRepository.delete(annonce);
+    }
+
+}

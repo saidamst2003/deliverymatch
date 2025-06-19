@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @RestController
@@ -64,4 +65,12 @@ public class AnnonceTrajetController {
         AnnonceTrajet annonce = annonceTrajetService.updateAnnonce(id, updatedAnnonce);
         return ResponseEntity.ok(annonce);
     }
+//supprission d'un annonce
+@DeleteMapping("/admin/annonces-conducteurs/{id}")
+public ResponseEntity<?> deleteAnnonce(@PathVariable Integer id) {
+    annonceTrajetService.delete(id);
+    return ResponseEntity.noContent().build(); // 204 No Content
+}
+
+
 }
