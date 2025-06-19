@@ -44,5 +44,11 @@ public class DemandeTransportService{
         return demandeTransportRepository.save(demande);
     }
 
+    public List<DemandeTransport> getDemandesByExpediteur(Long expediteurId) {
+        return demandeTransportRepository.findByExpediteur_Id(expediteurId);
+    }
+
+
+
 
 }

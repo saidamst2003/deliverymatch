@@ -20,5 +20,12 @@ public class DemandeTransportController {
         DemandeTransport created = demandeService.createDemande(demande);
         return ResponseEntity.ok(created);
     }
+//get demandes by expiditeur
+@GetMapping("/expediteur/{expediteurId}")
+public ResponseEntity<List<DemandeTransport>> getDemandesByExpediteur(@PathVariable Long expediteurId) {
+    List<DemandeTransport> demandes = demandeService.getDemandesByExpediteur(expediteurId);
+    return ResponseEntity.ok(demandes);
+}
+
 
 }
