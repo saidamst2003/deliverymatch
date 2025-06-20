@@ -1,11 +1,25 @@
-import { Component } from '@angular/core';
+// navbar.component.ts
+import { Component, inject, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule, Router } from '@angular/router';
+
+export interface User {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  role: 'conducteur' | 'expediteur' | 'admin';
+  isVerified: boolean;
+}
 
 @Component({
   selector: 'app-navbar',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule, RouterModule],
   templateUrl: './navbar.html',
-  styleUrl: './navbar.css'
+  styleUrls: ['./navbar.css']
 })
-export class Navbar {
+export class NavbarComponent {
 
 }
+
