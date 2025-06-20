@@ -18,7 +18,8 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/annonces-trajet")
-@CrossOrigin(origins = "")
+@CrossOrigin(origins = "http://localhost:4200")
+
 public class AnnonceTrajetController {
 
     private final AnnonceTrajetService annonceTrajetService;
