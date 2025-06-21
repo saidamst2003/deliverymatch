@@ -1,6 +1,7 @@
 package delivery.example.backend.repository;
 
 import delivery.example.backend.model.AnnonceTrajet;
+import delivery.example.backend.model.Conducteur;
 import delivery.example.backend.model.TypeMarchandise;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -22,4 +23,6 @@ public interface AnnonceTrajetRepository extends JpaRepository<AnnonceTrajet, In
 
     // Trouve toutes les annonces de trajet qui sont associées à un conducteur (non null)
     List<AnnonceTrajet> findAllByConducteurIsNotNull();
+    List<AnnonceTrajet> findByConducteur(Conducteur conducteur);
+
 }
