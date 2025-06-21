@@ -1,25 +1,11 @@
-
 import { Routes } from '@angular/router';
-import {MesTrajet} from './components/pages/mes-trajet/mes-trajet';
-import {LayoutComponent} from './components/layout/layout/layout';
+import { LoginComponent } from './components/pages/login/login';
+import { authGuard } from './guards/auth-guard';
+import { MesTrajet } from './components/pages/mes-trajet/mes-trajet';
+
 export const routes: Routes = [
-  {
-    path: '',
-    component: LayoutComponent,
-    children: [
-      {
-        path: 'mes-trajet',
-        component: MesTrajet
-      },
-      {
-        path: '',
-        redirectTo: '/mes-trajet',
-        pathMatch: 'full'
-      }
-    ]
-  },
-  {
-    path: '**',
-    redirectTo: '/mes-trajet'
-  }
+  { path: 'login', component: LoginComponent, data: { fullScreen: true } },
+  { path: 'dashboard', component: MesTrajet, canActivate: [authGuard] },
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: '**', redirectTo: 'login' },
 ];

@@ -1,7 +1,7 @@
 :root {
   --deep-green: #013220;
-  --forest-green: #014421;
-  --medium-green: #355E3B;
+  --hunter-green: #014421;
+  --fern-green: #355E3B;
   --moss-green: #8A9A5B;
   --khaki: #BCB88A;
 }
@@ -11,4 +11,8 @@ header{
 }
 svg{
   color: #BCB88A;
+}
+
+.hover-bg-medium-green:hover {
+  background-color: var(--fern-green);
 }

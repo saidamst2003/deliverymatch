@@ -62,7 +62,9 @@ export class MesTrajet implements OnInit {
     });
   }
 
-
+  ngOnInit(): void {
+    // Initialisation au chargement du composant
+  }
 
   get etapesIntermediaires(): FormArray {
     return this.annonceForm.get('etapesIntermediaires') as FormArray;
@@ -125,11 +127,7 @@ export class MesTrajet implements OnInit {
         this.annonceForm.get(key)?.markAsTouched();
       });
     }
-
-
-
   }
-
 
   resetForm() {
     this.annonceForm.reset({
