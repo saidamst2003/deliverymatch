@@ -1,41 +1,68 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {AuthService} from '../../../services/auth';
+import {LoginRequest} from '../../../models/user.model';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
+  standalone: true,
   imports: [
-    ReactiveFormsModule
+    CommonModule,
+    ReactiveFormsModule,
   ],
   templateUrl: './login.html',
-  styleUrl: './login.css'
+  styleUrls: ['./login.css']
 })
-export class Login {
-  loginForm: FormGroup;
-  errorMessage = '';
+export class LoginComponent implements OnInit {
+  private fb = inject(FormBuilder);
+  private authService = inject(AuthService);
+  private router = inject(Router);
 
-  constructor(
-    private fb: FormBuilder,
-    private router: Router,
-    private authService: AuthService
-  ) {
+  loginForm!: FormGroup;
+  errorMessage = '';
+  isLoading = false;
+
+  ngOnInit(): void {
+    // Rediriger si déjà connecté
+    if (this.authService.isAuthenticated()) {
+      this.router.navigate(['/dashboard']);
+    }
+
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required],
+      password: ['', [Validators.required, Validators.minLength(6)]]
     });
   }
 
-  onSubmit() {
-    if (this.loginForm.invalid) return;
-    this.authService.login(this.loginForm.value).subscribe({
-      next: (res) => {
-        this.authService.saveToken(res.token);
-        this.router.navigate(['/home']);
-      },
-      error: () => {
-        this.errorMessage = 'Email ou mot de passe incorrect';
-      },
-    });
+  onSubmit(): void {
+    if (this.loginForm.valid) {
+      this.isLoading = true;
+      this.errorMessage = '';
+
+      const loginData: LoginRequest = this.loginForm.value;
+
+      this.authService.login(loginData).subscribe({
+        next: (response) => {
+          this.isLoading = false;
+          console.log('Login successful:', response);
+          this.router.navigate(['/dashboard']);
+        },
+        error: (error) => {
+          this.isLoading = false;
+          console.error('Login error:', error);
+
+          if (error.status === 401) {
+            this.errorMessage = 'Email ou mot de passe incorrect';
+          } else if (error.status === 0) {
+            this.errorMessage = 'Erreur de connexion au serveur';
+          } else {
+            this.errorMessage = 'Une erreur est survenue lors de la connexion';
+          }
+        }
+      });
+    }
   }
 }
