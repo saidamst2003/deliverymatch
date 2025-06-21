@@ -20,7 +20,7 @@ export class LayoutComponent implements OnInit {
   ngOnInit() {
     this.router.events
       .pipe(
-        filter((event) => event instanceof NavigationEnd),
+        filter((event): event is NavigationEnd => event instanceof NavigationEnd),
         map(() => {
           let route = this.activatedRoute.firstChild;
           while (route?.firstChild) {

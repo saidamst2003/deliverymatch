@@ -2,7 +2,7 @@
   <app-sidebar class="h-screen" style="background: #013220"></app-sidebar>
   <div class="flex-1 flex flex-col overflow-hidden">
     <app-navbar></app-navbar>
-    <main class="flex-1 overflow-y-auto" [class.p-6]="!isFullScreen">
+    <main class="flex-1 overflow-y-auto" [ngClass]="{ 'p-6': !isFullScreen }">
       <router-outlet></router-outlet>
     </main>
   </div>
