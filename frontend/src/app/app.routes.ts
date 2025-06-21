@@ -7,10 +7,9 @@ import { AccueilComponent } from './components/pages/accueil/accueil';
 export const routes: Routes = [
   // Full-screen, public routes
   { path: 'accueil', component: AccueilComponent, data: { fullScreen: true } },
-  { path: 'login', component: LoginComponent },
-  { path: 'dashboard', component: MesTrajet, canActivate: [authGuard] },
+  { path: 'login', component: LoginComponent, data: { fullScreen: true } },
+  { path: 'dashboard', component: MesTrajet, canActivate: [authGuard], data: { fullScreen: true } },
   { path: '', redirectTo: 'accueil', pathMatch: 'full' },
-
   // Redirect any unknown paths to the accueil page
   { path: '**', redirectTo: 'accueil' },
 ];

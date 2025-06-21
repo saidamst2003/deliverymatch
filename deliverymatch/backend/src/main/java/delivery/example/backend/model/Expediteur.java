@@ -9,10 +9,9 @@ import java.util.List;
 @DiscriminatorValue("EXPEDITEUR")
 @Entity
 
-public class Expediteur  extends User {
+public class Expediteur extends User {
 
-    @OneToMany(mappedBy = "expediteur", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonBackReference("demande-expediteur")
+    @OneToMany(mappedBy = "expediteur")
     private List<DemandeTransport> demandesTransport;
 
 }

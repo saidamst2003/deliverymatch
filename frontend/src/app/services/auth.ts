@@ -1,101 +1,102 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject, tap } from 'rxjs';
-import { LoginRequest, LoginResponse, User } from '../models/user.model';
+import { LoginRequest, User } from '../models/user.model';
 import { jwtDecode } from 'jwt-decode';
-
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:8080'; // Ajustez selon votre backend
+  private apiUrl = 'http://localhost:8081';
+  private tokenKey = 'authToken'; // The single source of truth for the key
 
-  private currentUserSubject = new BehaviorSubject<User | null>(null);
-  public currentUser$ = this.currentUserSubject.asObservable();
+  private _user = new BehaviorSubject<User | null>(null);
+  public user$ = this._user.asObservable();
 
-  private tokenSubject = new BehaviorSubject<string | null>(null);
-  public token$ = this.tokenSubject.asObservable();
+  private _isAuthenticated = new BehaviorSubject<boolean>(false);
+  public isAuthenticated$ = this._isAuthenticated.asObservable();
 
-  constructor() {
-    // Vérifier s'il y a un token stocké au démarrage
-    const token = this.getStoredToken();
-    if (token && !this.isTokenExpired(token)) {
-      this.tokenSubject.next(token);
-      this.setCurrentUserFromToken(token);
+  private loggedIn = new BehaviorSubject<boolean>(this.hasToken());
+
+  constructor(private router: Router) {
+    if (this.isBrowser()) {
+      const token = this.getToken();
+      if (token && !this.isTokenExpired(token)) {
+        this.updateState(token);
+      }
     }
   }
 
-  login(loginData: LoginRequest): Observable<LoginResponse> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json'
-    });
+  private isBrowser(): boolean {
+    return typeof window !== 'undefined' && typeof sessionStorage !== 'undefined';
+  }
 
-    return this.http.post<LoginResponse>(`${this.apiUrl}/user/login`, loginData, { headers })
-      .pipe(
-        tap(response => {
-          if (response.token) {
-            this.storeToken(response.token);
-            this.tokenSubject.next(response.token);
-            this.setCurrentUserFromToken(response.token);
+  login(loginRequest: LoginRequest): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/user/login`, loginRequest).pipe(
+      tap(response => {
+        if (response && response.token) {
+          if (this.isBrowser()) {
+            sessionStorage.setItem(this.tokenKey, response.token);
+            this.updateState(response.token);
+            console.log('AuthService: Token stored successfully.');
           }
-        })
-      );
+        } else {
+          console.log('AuthService: Login response did not contain a token.');
+        }
+      })
+    );
   }
 
   logout(): void {
-    this.removeStoredToken();
-    this.tokenSubject.next(null);
-    this.currentUserSubject.next(null);
+    if (this.isBrowser()) {
+      sessionStorage.removeItem(this.tokenKey);
+    }
+    this._user.next(null);
+    this._isAuthenticated.next(false);
   }
 
   isAuthenticated(): boolean {
-    const token = this.getStoredToken();
-    return token !== null && !this.isTokenExpired(token);
+    const token = this.getToken();
+    return !!token && !this.isTokenExpired(token);
   }
 
   getToken(): string | null {
-    return this.getStoredToken();
+    if (this.isBrowser()) {
+      return sessionStorage.getItem(this.tokenKey);
+    }
+    return null;
   }
 
-  private setCurrentUserFromToken(token: string): void {
+  private updateState(token: string): void {
+    const user: User = this.decodeToken(token);
+    this._user.next(user);
+    this._isAuthenticated.next(true);
+  }
+
+  private decodeToken(token: string): any {
     try {
-      const decodedToken: any = jwtDecode(token);
-      const user: User = {
-        id: decodedToken.id,
-        fullName: decodedToken.firstName,
-        email: decodedToken.email || decodedToken.sub,
-        role: decodedToken.role
-      };
-      this.currentUserSubject.next(user);
+      return jwtDecode(token);
     } catch (error) {
       console.error('Error decoding token:', error);
+      return null;
     }
   }
 
   private isTokenExpired(token: string): boolean {
     try {
-      const decodedToken: any = jwtDecode(token);
-      const expirationDate = new Date(decodedToken.exp * 1000);
-      return expirationDate < new Date();
+      const decoded: any = this.decodeToken(token);
+      const expirationDate = new Date(0);
+      expirationDate.setUTCSeconds(decoded.exp);
+      return expirationDate.valueOf() < new Date().valueOf();
     } catch (error) {
-      return true;
+      return true; // If token is invalid, treat as expired
     }
   }
 
-  private storeToken(token: string): void {
-    sessionStorage.setItem('auth_token', token);
-  }
-
-  getStoredToken(): string | null {
-    if (typeof sessionStorage !== 'undefined') {
-      return sessionStorage.getItem('auth_token');
-    }
-    return null;
-  }
-
-  private removeStoredToken(): void {
-    sessionStorage.removeItem('auth_token');
+  private hasToken(): boolean {
+    return this.isBrowser() && !!this.getToken();
   }
 }

@@ -25,6 +25,10 @@ public class User {
     @Column(name = "password", nullable = false)
     private String password;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false, insertable=false, updatable=false)
+    private Role role;
+
     public String getEmail() {
         return email;
     }
@@ -32,12 +36,6 @@ public class User {
     public void setEmail(String email) {
         this.email = email;
     }
-
-//    @Enumerated(EnumType.STRING)
-//    @Column(name = "role", nullable = false)
-//    private Role role;
-
-
 
     public User () {}
 
@@ -65,12 +63,12 @@ public class User {
         this.password = password;
     }
 
-//    public Role getRole() {
-//        return role;
-//    }
-//
-//    public void setRole(Role role) {
-//        this.role = role;
-//    }
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
 
 }

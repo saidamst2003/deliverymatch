@@ -32,6 +32,7 @@ public class AnnonceTrajetController {
 
     // Publie une nouvelle annonce de trajet pour un conducteur donné
     @PostMapping("/publier/{conducteurId}")
+
     public ResponseEntity<?> publierAnnonce(
             @PathVariable Long conducteurId,
             @Valid @RequestBody AnnonceTrajetDTO annonceDTO) {

@@ -47,7 +47,8 @@ export class LoginComponent implements OnInit {
       this.authService.login(loginData).subscribe({
         next: (response) => {
           this.isLoading = false;
-          console.log('Login successful:', response);
+          console.log('Login successful:', JSON.stringify(response, null, 2));
+
           this.router.navigate(['/dashboard']);
         },
         error: (error) => {
@@ -64,5 +65,4 @@ export class LoginComponent implements OnInit {
         }
       });
     }
-  }
-}
+  }}

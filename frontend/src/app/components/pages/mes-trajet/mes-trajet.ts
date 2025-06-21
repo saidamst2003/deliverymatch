@@ -1,7 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormArray, Validators, ReactiveFormsModule } from '@angular/forms';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 
 // Types et interfaces
@@ -12,6 +12,7 @@ export interface AnnonceTrajetDTO {
   capaciteDisponible: number;
   dateCreation: string;
   typeMarchandiseAcceptee?: TypeMarchandise;
+  // conducteurId n'est pas dans le DTO, il est dans l'URL
 }
 
 export enum TypeMarchandise {
@@ -22,9 +23,10 @@ export enum TypeMarchandise {
   VETEMENT = 'VETEMENT',
   AUTRE = 'AUTRE'
 }
+
 @Component({
   selector: 'app-mes-trajet',
-  imports: [CommonModule, ReactiveFormsModule, HttpClientModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './mes-trajet.html',
   styleUrl: './mes-trajet.css'
 })
@@ -33,13 +35,11 @@ export class MesTrajet implements OnInit {
   private http = inject(HttpClient);
   private router = inject(Router);
 
+  private readonly API_URL = 'http://localhost:8081/api/annonces-trajet';
   annonceForm: FormGroup;
   isLoading = false;
-  successMessage = '';
+  successMessage: string | null = null;
   errorMessage = '';
-
-  // URL de votre API backend
-  private readonly API_URL = 'http://localhost:8080/api/trajets'; // Ajustez selon votre configuration
 
   typesMarketing = [
     { value: TypeMarchandise.FRAGILE, label: 'Fragile' },
@@ -63,7 +63,34 @@ export class MesTrajet implements OnInit {
   }
 
   ngOnInit(): void {
-    // Initialisation au chargement du composant
+    // Vérifier si l'utilisateur est connecté
+    if (!this.getAuthToken()) {
+      this.errorMessage = 'Vous devez être connecté pour publier une annonce';
+      this.router.navigate(['/login']); // Rediriger vers la page de connexion
+    }
+  }
+
+  // Méthode pour récupérer le token d'authentification
+  private getAuthToken(): string | null {
+    // Ajustez selon votre méthode de stockage du token
+    return localStorage.getItem('authToken') ||
+      localStorage.getItem('token') ||
+      sessionStorage.getItem('authToken') ||
+      sessionStorage.getItem('token');
+  }
+
+  // Méthode pour créer les headers avec authentification
+  private createAuthHeaders(): HttpHeaders {
+    const token = this.getAuthToken();
+
+    if (!token) {
+      throw new Error('Token d\'authentification manquant');
+    }
+
+    return new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}` // Ou 'Token' selon votre backend
+    });
   }
 
   get etapesIntermediaires(): FormArray {
@@ -117,10 +144,24 @@ export class MesTrajet implements OnInit {
           },
           error: (error) => {
             this.isLoading = false;
-            this.errorMessage = error.error?.message || error.error || 'Erreur lors de la publication de l\'annonce';
-            console.error('Erreur:', error);
+            console.error('Erreur complète:', error);
+
+            // Gestion spécifique des erreurs
+            if (error.status === 401) {
+              this.errorMessage = 'Session expirée. Veuillez vous reconnecter.';
+              this.router.navigate(['/login']);
+            } else if (error.status === 403) {
+              this.errorMessage = 'Vous n\'avez pas les permissions nécessaires.';
+            } else if (error.status === 0) {
+              this.errorMessage = 'Erreur de connexion au serveur.';
+            } else {
+              this.errorMessage = error.error?.message ||
+                error.message ||
+                'Erreur lors de la publication de l\'annonce';
+            }
           }
         });
+
     } else {
       // Marquer tous les champs comme touchés pour afficher les erreurs
       Object.keys(this.annonceForm.controls).forEach(key => {

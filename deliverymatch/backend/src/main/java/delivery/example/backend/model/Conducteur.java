@@ -7,12 +7,11 @@ import jakarta.validation.constraints.DecimalMin;
 
 import java.util.List;
 
-@DiscriminatorValue("CONDUCTEUR")
 @Entity
+@DiscriminatorValue("CONDUCTEUR")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 
 public class Conducteur extends User {
-    @OneToMany(mappedBy = "conducteur", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "conducteur")
     private List<AnnonceTrajet> annoncesTrajet;
-
 }
