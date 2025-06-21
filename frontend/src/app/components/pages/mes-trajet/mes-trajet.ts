@@ -39,7 +39,7 @@ export class MesTrajet implements OnInit {
   errorMessage = '';
 
   // URL de votre API backend
-  private readonly API_URL = 'http://localhost:8080/api/annonces-trajet'; // Ajustez selon votre configuration
+  private readonly API_URL = 'http://localhost:8080/api/trajets'; // Ajustez selon votre configuration
 
   typesMarketing = [
     { value: TypeMarchandise.FRAGILE, label: 'Fragile' },
@@ -62,10 +62,7 @@ export class MesTrajet implements OnInit {
     });
   }
 
-  ngOnInit() {
-    // Initialiser avec une étape vide si nécessaire
-    // this.addEtape();
-  }
+
 
   get etapesIntermediaires(): FormArray {
     return this.annonceForm.get('etapesIntermediaires') as FormArray;
@@ -86,7 +83,7 @@ export class MesTrajet implements OnInit {
       this.successMessage = '';
 
       const conducteurId = this.annonceForm.get('conducteurId')?.value;
-      const formData = { ...this.annonceForm.value };
+      const formData = {...this.annonceForm.value};
 
       // Supprimer conducteurId du body car il sera dans l'URL
       delete formData.conducteurId;
@@ -128,7 +125,11 @@ export class MesTrajet implements OnInit {
         this.annonceForm.get(key)?.markAsTouched();
       });
     }
+
+
+
   }
+
 
   resetForm() {
     this.annonceForm.reset({
