@@ -18,7 +18,8 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/annonces-trajet")
-@CrossOrigin(origins = "")
+@CrossOrigin(origins = "http://localhost:4200")
+
 public class AnnonceTrajetController {
 
     private final AnnonceTrajetService annonceTrajetService;
@@ -31,6 +32,7 @@ public class AnnonceTrajetController {
 
     // Publie une nouvelle annonce de trajet pour un conducteur donné
     @PostMapping("/publier/{conducteurId}")
+
     public ResponseEntity<?> publierAnnonce(
             @PathVariable Long conducteurId,
             @Valid @RequestBody AnnonceTrajetDTO annonceDTO) {
