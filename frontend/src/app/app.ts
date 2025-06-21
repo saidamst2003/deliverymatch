@@ -4,10 +4,11 @@ import {LayoutComponent} from './components/layout/layout/layout';
 
 @Component({
   selector: 'app-root',
+  standalone: true,
   imports: [RouterOutlet,LayoutComponent],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
 export class App {
-  protected title = 'frontend';
+  title = 'delivery-frontend';
 }
