@@ -26,6 +26,7 @@ export enum TypeMarchandise {
 
 @Component({
   selector: 'app-mes-trajet',
+  standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './mes-trajet.html',
   styleUrl: './mes-trajet.css'
@@ -136,17 +137,19 @@ export class MesTrajet implements OnInit {
             this.successMessage = 'Annonce publiée avec succès !';
             console.log('Annonce créée:', response);
 
-            // Réinitialiser le formulaire après succès
-            setTimeout(() => {
-              this.resetForm();
-              this.successMessage = '';
-            }, 3000);
+            // التوجيه مباشرة لصفحة /pub بعد نجاح النشر
+            this.router.navigate(['/pub']);
+
+            // إذا بغيت تفرغ الفورم قبل التنقل (اختياري)
+            // setTimeout(() => {
+            //   this.resetForm();
+            //   this.successMessage = '';
+            // }, 3000);
           },
           error: (error) => {
             this.isLoading = false;
             console.error('Erreur complète:', error);
 
-            // Gestion spécifique des erreurs
             if (error.status === 401) {
               this.errorMessage = 'Session expirée. Veuillez vous reconnecter.';
               this.router.navigate(['/login']);
@@ -161,6 +164,7 @@ export class MesTrajet implements OnInit {
             }
           }
         });
+
 
     } else {
       // Marquer tous les champs comme touchés pour afficher les erreurs
@@ -180,6 +184,6 @@ export class MesTrajet implements OnInit {
   }
 
   goBack() {
-    this.router.navigate(['/']); // Ajustez selon votre routing
+    this.router.navigate(['/pub']);
   }
 }
