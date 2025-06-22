@@ -1,5 +1,6 @@
 package delivery.example.backend.repository;
 
+import delivery.example.backend.dto.AnnonceTrajetDTO;
 import delivery.example.backend.model.AnnonceTrajet;
 import delivery.example.backend.model.Conducteur;
 import delivery.example.backend.model.TypeMarchandise;
@@ -22,7 +23,12 @@ public interface AnnonceTrajetRepository extends JpaRepository<AnnonceTrajet, In
                                        @Param("typeMarchandise") TypeMarchandise typeMarchandise);
 
     // Trouve toutes les annonces de trajet qui sont associées à un conducteur (non null)
-    List<AnnonceTrajet> findAllByConducteurIsNotNull();
-    List<AnnonceTrajet> findByConducteur(Conducteur conducteur);
+
+
+    @Query("SELECT new delivery.example.backend.dto.AnnonceTrajetDTO(" +
+            "a.lieuDepart, a.etapesIntermediaires, a.destination, " +
+            "a.capaciteDisponible, a.typeMarchandiseAcceptee) " +
+            "FROM AnnonceTrajet a WHERE a.conducteur.id = :conducteurId")
+    List<AnnonceTrajet> findByConducteurId(Long conducteurId);
 
 }

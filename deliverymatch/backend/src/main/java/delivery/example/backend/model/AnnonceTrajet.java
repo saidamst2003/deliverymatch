@@ -26,11 +26,12 @@ public class AnnonceTrajet {
     @Column(name = "lieu_depart", nullable = false)
     private String lieuDepart;
 
-    @ElementCollection
-    @CollectionTable(name = "etapes_intermediaires",
-            joinColumns = @JoinColumn(name = "annonce_id"))
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "etapes_intermediaires", joinColumns = @JoinColumn(name = "annonce_id"))
     @Column(name = "etape")
     private List<String> etapesIntermediaires;
+
 
     @NotBlank(message = "La destination est obligatoire")
     @Column(name = "destination", nullable = false)
