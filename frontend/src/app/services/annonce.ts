@@ -15,4 +15,8 @@ export class AnnonceService {
   getAllAnnoncesConducteurs(): Observable<AnnonceTrajetDTO[]> {
     return this.http.get<AnnonceTrajetDTO[]>(`${this.baseUrl}/annonces-trajet/admin/annonces-conducteurs`);
   }
+
+  deleteAnnonce(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/annonces-trajet/admin/annonces-conducteurs/${id}`);
+  }
 }

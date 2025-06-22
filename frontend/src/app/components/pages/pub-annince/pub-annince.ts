@@ -59,16 +59,22 @@ export class PubAnnince implements OnInit {
 
   supprimerAnnonce(id: number): void {
     if (confirm('Êtes-vous sûr de vouloir supprimer cette annonce ?')) {
-      console.log('Supprimer annonce avec ID:', id);
-      // TODO: Implémenter la logique de suppression
-      // this.annonceService.deleteAnnonce(id).subscribe({
-      //   next: () => {
-      //     this.loadAnnonces(); // Recharger la liste
-      //   },
-      //   error: (error) => {
-      //     console.error('Erreur lors de la suppression:', error);
-      //   }
-      // });
+      this.loading = true;
+      this.error = null;
+      
+      this.annonceService.deleteAnnonce(id).subscribe({
+        next: () => {
+          console.log('Annonce supprimée avec succès');
+          this.loading = false;
+          // Recharger la liste des annonces après suppression
+          this.loadAnnonces();
+        },
+        error: (error: any) => {
+          console.error('Erreur lors de la suppression:', error);
+          this.error = 'Erreur lors de la suppression de l\'annonce';
+          this.loading = false;
+        }
+      });
     }
   }
 }
