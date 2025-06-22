@@ -1,0 +1,85 @@
+[33m2df24a0[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mpubAnnonceF[m[33m)[m HEAD@{0}: reset: moving to 2df24a0e837107294d9df0412a04265bc930cc68
+[33m444301d[m HEAD@{1}: commit: j'ai vreer conction de affichet tous les annonce pare condictour
+[33m2df24a0[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mpubAnnonceF[m[33m)[m HEAD@{2}: checkout: moving from crudannonce to pubAnnonceF
+[33m87bced1[m[33m ([m[1;31morigin/crudannonce[m[33m, [m[1;32mcrudannonce[m[33m)[m HEAD@{3}: checkout: moving from pubAnnonceF to crudannonce
+[33m2df24a0[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mpubAnnonceF[m[33m)[m HEAD@{4}: commit: modification
+[33m33c27fa[m HEAD@{5}: commit: j'ai creer repo pour fonction gett all
+[33m011508b[m HEAD@{6}: commit: j'ai crEER frent pour affichage de annonce
+[33m1c4a8aa[m[33m ([m[1;31morigin/pubAnnonceF[m[33m)[m HEAD@{7}: checkout: moving from master to pubAnnonceF
+[33m54102b5[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmaster[m[33m, [m[1;32maffichAnnonceF[m[33m)[m HEAD@{8}: checkout: moving from 1c4a8aa3bb062beae5738f84e4007c259448d963 to master
+[33m1c4a8aa[m[33m ([m[1;31morigin/pubAnnonceF[m[33m)[m HEAD@{9}: checkout: moving from master to 1c4a8aa
+[33m54102b5[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmaster[m[33m, [m[1;32maffichAnnonceF[m[33m)[m HEAD@{10}: checkout: moving from 1c4a8aa3bb062beae5738f84e4007c259448d963 to master
+[33m1c4a8aa[m[33m ([m[1;31morigin/pubAnnonceF[m[33m)[m HEAD@{11}: checkout: moving from pubAnnonceF to 1c4a8aa
+[33m1c4a8aa[m[33m ([m[1;31morigin/pubAnnonceF[m[33m)[m HEAD@{12}: checkout: moving from affichAnnonceF to pubAnnonceF
+[33m54102b5[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmaster[m[33m, [m[1;32maffichAnnonceF[m[33m)[m HEAD@{13}: checkout: moving from master to affichAnnonceF
+[33m54102b5[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmaster[m[33m, [m[1;32maffichAnnonceF[m[33m)[m HEAD@{14}: checkout: moving from affichAnnonceF to master
+[33m54102b5[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmaster[m[33m, [m[1;32maffichAnnonceF[m[33m)[m HEAD@{15}: checkout: moving from master to affichAnnonceF
+[33m54102b5[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmaster[m[33m, [m[1;32maffichAnnonceF[m[33m)[m HEAD@{16}: pull origin master: Fast-forward
+[33m81cabd6[m HEAD@{17}: checkout: moving from pubAnnonceF to master
+[33m1c4a8aa[m[33m ([m[1;31morigin/pubAnnonceF[m[33m)[m HEAD@{18}: Branch: renamed refs/heads/aficheDannonceF to refs/heads/pubAnnonceF
+[33m1c4a8aa[m[33m ([m[1;31morigin/pubAnnonceF[m[33m)[m HEAD@{20}: commit: j'ai terminer publication d'un annoce
+[33m17d96f6[m HEAD@{21}: commit: j'ai creer composant accueil
+[33m416348d[m HEAD@{22}: commit (merge): j'ai modiffier sur html et css de page login
+[33m8cf8a90[m HEAD@{23}: checkout: moving from master to aficheDannonceF
+[33m81cabd6[m HEAD@{24}: pull origin master: Fast-forward
+[33m9b2c966[m HEAD@{25}: checkout: moving from loginFent to master
+[33m4693bb7[m[33m ([m[1;32mloginFent[m[33m)[m HEAD@{26}: commit: j'ai terminer login et j'ai tester
+[33m4b6a1dd[m HEAD@{27}: commit: j'ai creer composant guard
+[33m3074d02[m HEAD@{28}: commit: j'ai creer ts pour AuthInterceptor
+[33me425fac[m HEAD@{29}: commit: j'ai creer logique de login et html
+[33mf23b2bd[m HEAD@{30}: commit: j'ai creer service auth
+[33m4dab9af[m HEAD@{31}: commit: j'ai creer deux composant auth.service et auth.interceptor
+[33m84ebffe[m HEAD@{32}: checkout: moving from aficheDannonceF to loginFent
+[33m8cf8a90[m HEAD@{33}: checkout: moving from loginFent to aficheDannonceF
+[33m84ebffe[m HEAD@{34}: checkout: moving from aficheDannonceF to loginFent
+[33m8cf8a90[m HEAD@{35}: commit: j'ai creer fonction creation annonce
+[33mc80ce30[m HEAD@{36}: commit: j'ai creer dans backend web config
+[33mb505737[m HEAD@{37}: commit: j'ai creer reting mour mes trajet
+[33m4a4d91e[m HEAD@{38}: commit: j'ai creer docker file
+[33m9b2c966[m HEAD@{39}: checkout: moving from master to aficheDannonceF
+[33m9b2c966[m HEAD@{40}: pull origin master: Fast-forward
+[33m84ebffe[m HEAD@{41}: checkout: moving from navsidebar to master
+[33m4436510[m[33m ([m[1;31morigin/navsidebar[m[33m, [m[1;32mnavsidebar[m[33m)[m HEAD@{42}: commit: j'ai creer nave et sidebar et layout
+[33m84ebffe[m HEAD@{43}: checkout: moving from loginFent to navsidebar
+[33m84ebffe[m HEAD@{44}: pull origin master: Fast-forward
+[33me4f2e8d[m HEAD@{45}: checkout: moving from master to loginFent
+[33m84ebffe[m HEAD@{46}: commit: j'ai creer structure de frant
+[33me4f2e8d[m HEAD@{47}: checkout: moving from loginFent to master
+[33me4f2e8d[m HEAD@{48}: checkout: moving from master to loginFent
+[33me4f2e8d[m HEAD@{49}: pull origin master: Fast-forward
+[33m26a72b3[m HEAD@{50}: checkout: moving from DemandeTransport to master
+[33md81108d[m[33m ([m[1;31morigin/DemandeTransport[m[33m, [m[1;32mDemandeTransport[m[33m)[m HEAD@{51}: commit: j ai fini travailler sur de mande de transpor
+[33m296ed8a[m HEAD@{52}: commit: j'ai creer controller service pour delete un demande
+[33mbc5035d[m HEAD@{53}: commit: j'ai creer conttroller et service pour get un demande par id
+[33md48a80d[m HEAD@{54}: commit: j'ai modifier dans repo de dommandetransport et j'ai creer conttroller et service de demande
+[33md3dcb00[m HEAD@{55}: commit: jai creer fonction de creer un demande servive et conttroller
+[33ma60e0be[m HEAD@{56}: commit: jai creer DemandeTransportRepository
+[33m26a72b3[m HEAD@{57}: checkout: moving from master to DemandeTransport
+[33m26a72b3[m HEAD@{58}: pull origin master: Fast-forward
+[33md3a6266[m HEAD@{59}: checkout: moving from crudannonce to master
+[33m87bced1[m[33m ([m[1;31morigin/crudannonce[m[33m, [m[1;32mcrudannonce[m[33m)[m HEAD@{60}: commit: j'ai creer service et cintroller pour la supprission
+[33mece5018[m HEAD@{61}: commit: i create CONTROLLER AND SERVICE POUR UPDET
+[33m6a4f027[m HEAD@{62}: commit: i create controller the find all annonce by conducteur
+[33m1b4e93c[m HEAD@{63}: commit: i create service the find all annonce by conducteur
+[33meae3d71[m HEAD@{64}: commit: i create repo the find all annonce by conducteur
+[33mc2b2af4[m[33m ([m[1;31morigin/recherche-annonce[m[33m, [m[1;32mrecherche-annonce[m[33m)[m HEAD@{65}: checkout: moving from master to crudannonce
+[33md3a6266[m HEAD@{66}: pull origin master: Fast-forward
+[33m9afa7e4[m HEAD@{67}: checkout: moving from recherche-annonce to master
+[33mc2b2af4[m[33m ([m[1;31morigin/recherche-annonce[m[33m, [m[1;32mrecherche-annonce[m[33m)[m HEAD@{68}: commit: j'ai creer recherch controller d'un annonce
+[33mc9a4e26[m HEAD@{69}: commit: j'ai creer service de recherche
+[33m6f13063[m HEAD@{70}: commit: j'ai creer query pour recherche
+[33m59fc0e6[m[33m ([m[1;31morigin/annonce[m[33m, [m[1;32mannonce[m[33m)[m HEAD@{71}: checkout: moving from master to recherche-annonce
+[33m9afa7e4[m HEAD@{72}: pull origin master: Fast-forward
+[33mbc17625[m HEAD@{73}: checkout: moving from annonce to master
+[33m59fc0e6[m[33m ([m[1;31morigin/annonce[m[33m, [m[1;32mannonce[m[33m)[m HEAD@{74}: commit: j'ai terminer fonction de creeation d'un annonce
+[33m2af5670[m HEAD@{75}: commit: j'ai creer ConducteurRepository
+[33m002d9e5[m HEAD@{76}: commit: j'ai creer AnnonceTrajetService
+[33m3630357[m HEAD@{77}: commit: j'ai creer repo de AnnonceTrajetRepository
+[33m82a69de[m HEAD@{78}: commit: j'ai creer dto AnnonceTrajet
+[33mbc17625[m HEAD@{79}: reset: moving to master
+[33me8ebc1d[m HEAD@{80}: checkout: moving from master to annonce
+[33mbc17625[m HEAD@{81}: checkout: moving from annonce to master
+[33me8ebc1d[m HEAD@{82}: checkout: moving from master to annonce
+[33mbc17625[m HEAD@{83}: checkout: moving from annonce to master
+[33me8ebc1d[m HEAD@{84}: commit: save chagement
+[33mc79f418[m HEAD@{85}: commit: j'ai creer

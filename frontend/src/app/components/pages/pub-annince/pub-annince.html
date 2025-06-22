@@ -1,234 +1,71 @@
-<div class="container mx-auto px-4 py-8">
-  <!-- Header -->
-  <div class="mb-8">
-    <h1 class="text-3xl font-bold text-gray-800 mb-2">Gestion des Annonces de Trajet</h1>
-    <p class="text-gray-600">Publiez, recherchez et gérez vos annonces de transport</p>
-  </div>
-
-  <!-- Messages -->
-  <div *ngIf="errorMessage" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-    {{ errorMessage }}
-  </div>
-  <div *ngIf="successMessage" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4 flex justify-between items-center">
-    <span>{{ successMessage }}</span>
-    <button 
-      *ngIf="successMessage.includes('créée avec succès') || successMessage.includes('mise à jour avec succès')"
-      (click)="goToAffichageAnnonce()"
-      class="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700">
-      Voir les annonces
-    </button>
-  </div>
-
-  <!-- Navigation Button -->
-  <div class="mb-6">
-    <button 
-      (click)="goToAffichageAnnonce()"
-      class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors duration-200">
-      📋 Voir toutes les annonces
-    </button>
-  </div>
-
-  <!-- Search Section -->
-  <div class="bg-white rounded-lg shadow-md p-6 mb-8">
-    <h2 class="text-xl font-semibold mb-4">Rechercher des Annonces</h2>
-    <form [formGroup]="searchForm" (ngSubmit)="searchAnnouncements()" class="grid grid-cols-1 md:grid-cols-4 gap-4">
-      <div>
-        <label class="block text-sm font-medium text-gray-700 mb-2">Destination</label>
-        <input 
-          type="text" 
-          formControlName="destination"
-          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="Entrez la destination">
-      </div>
-      <div>
-        <label class="block text-sm font-medium text-gray-700 mb-2">Date de création</label>
-        <input 
-          type="date" 
-          formControlName="dateCreation"
-          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-      </div>
-      <div>
-        <label class="block text-sm font-medium text-gray-700 mb-2">Type de marchandise</label>
-        <select 
-          formControlName="typeMarchandise"
-          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-          <option value="">Tous les types</option>
-          <option *ngFor="let type of typeMarchandiseOptions" [value]="type">
-            {{ getTypeMarchandiseLabel(type) }}
-          </option>
-        </select>
-      </div>
-      <div class="flex items-end gap-2">
-        <button 
-          type="submit" 
-          [disabled]="loading"
-          class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 disabled:opacity-50">
-          {{ loading ? 'Recherche...' : 'Rechercher' }}
+<div class="annonces-container">
+    <div class="header">
+        <h2>Annonces Conducteurs</h2>
+        <button class="btn btn-refresh" (click)="refreshAnnonces()">
+            <i class="fa fa-refresh"></i> Actualiser
         </button>
-        <button 
-          type="button" 
-          (click)="clearSearch()"
-          class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600">
-          Effacer
-        </button>
-      </div>
-    </form>
-  </div>
-
-  <!-- Announcement Form -->
-  <div class="bg-white rounded-lg shadow-md p-6 mb-8">
-    <h2 class="text-xl font-semibold mb-4">
-      {{ isEditing ? 'Modifier l\'Annonce' : 'Publier une Nouvelle Annonce' }}
-    </h2>
-    <form [formGroup]="announcementForm" (ngSubmit)="onSubmit()" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <div>
-        <label class="block text-sm font-medium text-gray-700 mb-2">Lieu de départ *</label>
-        <input 
-          type="text" 
-          formControlName="lieuDepart"
-          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="Entrez le lieu de départ">
-        <div *ngIf="announcementForm.get('lieuDepart')?.invalid && announcementForm.get('lieuDepart')?.touched" 
-             class="text-red-500 text-sm mt-1">
-          Le lieu de départ est requis
-        </div>
-      </div>
-      <div>
-        <label class="block text-sm font-medium text-gray-700 mb-2">Destination *</label>
-        <input 
-          type="text" 
-          formControlName="destination"
-          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="Entrez la destination">
-        <div *ngIf="announcementForm.get('destination')?.invalid && announcementForm.get('destination')?.touched" 
-             class="text-red-500 text-sm mt-1">
-          La destination est requise
-        </div>
-      </div>
-      <div>
-        <label class="block text-sm font-medium text-gray-700 mb-2">Capacité disponible (kg) *</label>
-        <input 
-          type="number" 
-          formControlName="capaciteDisponible"
-          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="Entrez la capacité">
-        <div *ngIf="announcementForm.get('capaciteDisponible')?.invalid && announcementForm.get('capaciteDisponible')?.touched" 
-             class="text-red-500 text-sm mt-1">
-          La capacité doit être positive
-        </div>
-      </div>
-      <div>
-        <label class="block text-sm font-medium text-gray-700 mb-2">Type de marchandise acceptée *</label>
-        <select 
-          formControlName="typeMarchandiseAcceptee"
-          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-          <option value="">Sélectionnez un type</option>
-          <option *ngFor="let type of typeMarchandiseOptions" [value]="type">
-            {{ getTypeMarchandiseLabel(type) }}
-          </option>
-        </select>
-        <div *ngIf="announcementForm.get('typeMarchandiseAcceptee')?.invalid && announcementForm.get('typeMarchandiseAcceptee')?.touched" 
-             class="text-red-500 text-sm mt-1">
-          Le type de marchandise est requis
-        </div>
-      </div>
-      <div class="md:col-span-2">
-        <label class="block text-sm font-medium text-gray-700 mb-2">Étapes intermédiaires</label>
-        <input 
-          type="text" 
-          formControlName="etapesIntermediaires"
-          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="Entrez les étapes séparées par des virgules">
-      </div>
-      <div class="md:col-span-2 flex gap-2">
-        <button 
-          type="submit" 
-          [disabled]="announcementForm.invalid || loading"
-          class="bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700 disabled:opacity-50">
-          {{ loading ? 'Enregistrement...' : (isEditing ? 'Mettre à jour' : 'Publier') }}
-        </button>
-        <button 
-          *ngIf="isEditing"
-          type="button" 
-          (click)="cancelEdit()"
-          class="bg-gray-500 text-white px-6 py-2 rounded-md hover:bg-gray-600">
-          Annuler
-        </button>
-      </div>
-    </form>
-  </div>
-
-  <!-- Announcements Display -->
-  <div class="bg-white rounded-lg shadow-md p-6">
-    <h2 class="text-xl font-semibold mb-4">Annonces de Trajet</h2>
-    
-    <div *ngIf="loading" class="text-center py-8">
-      <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-      <p class="mt-2 text-gray-600">Chargement des annonces...</p>
     </div>
 
-    <div *ngIf="!loading && filteredAnnouncements.length === 0" class="text-center py-8">
-      <p class="text-gray-600">Aucune annonce trouvée</p>
+    <div *ngIf="loading" class="loading">
+        <div class="spinner"></div>
+        <p>Chargement des annonces...</p>
     </div>
 
-    <!-- Announcements Grid -->
-    <div *ngIf="!loading && filteredAnnouncements.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <div *ngFor="let announcement of filteredAnnouncements" 
-           class="bg-gradient-to-b from-blue-400 to-blue-200 dark:from-gray-800 dark:to-gray-700 border rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
-        <div class="p-6">
-          <!-- Header -->
-          <div class="flex justify-between items-start mb-4">
-            <h3 class="text-xl font-bold text-black dark:text-white">
-              {{ announcement.lieuDepart }} → {{ announcement.destination }}
-            </h3>
-            <span class="bg-blue-600 text-white text-xs px-2 py-1 rounded-full">
-              #{{ announcement.id }}
-            </span>
-          </div>
+    <div *ngIf="error" class="error-message">
+        <i class="fa fa-exclamation-triangle"></i>
+        {{ error }}
+    </div>
 
-          <!-- Content -->
-          <div class="space-y-3">
-            <div class="flex items-center text-sm">
-              <span class="font-medium text-gray-700 dark:text-gray-300">Capacité:</span>
-              <span class="ml-2 text-black dark:text-white">{{ announcement.capaciteDisponible }} kg</span>
-            </div>
-            
-            <div class="flex items-center text-sm">
-              <span class="font-medium text-gray-700 dark:text-gray-300">Type:</span>
-              <span class="ml-2 text-black dark:text-white">{{ getTypeMarchandiseLabel(announcement.typeMarchandiseAcceptee) }}</span>
-            </div>
-            
-            <div class="flex items-center text-sm">
-              <span class="font-medium text-gray-700 dark:text-gray-300">Date:</span>
-              <span class="ml-2 text-black dark:text-white">{{ announcement.dateCreation | date:'dd/MM/yyyy' }}</span>
-            </div>
-
-            <div *ngIf="announcement.etapesIntermediaires && announcement.etapesIntermediaires.length > 0" class="text-sm">
-              <span class="font-medium text-gray-700 dark:text-gray-300">Étapes:</span>
-              <div class="mt-1">
-                <span *ngFor="let etape of announcement.etapesIntermediaires; let last = last" 
-                      class="text-black dark:text-white">
-                  {{ etape }}{{ !last ? ', ' : '' }}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Action Buttons -->
-          <div class="flex gap-2 mt-4">
-            <button 
-              (click)="editAnnouncement(announcement)"
-              class="flex-1 bg-blue-600 text-white px-3 py-2 rounded-md hover:bg-blue-700 transition-colors duration-200 text-sm">
-              Modifier
-            </button>
-            <button 
-              (click)="deleteAnnouncement(announcement.id)"
-              class="flex-1 bg-red-600 text-white px-3 py-2 rounded-md hover:bg-red-700 transition-colors duration-200 text-sm">
-              Supprimer
-            </button>
-          </div>
+    <div *ngIf="!loading && !error" class="annonces-list">
+        <div *ngIf="annonces.length === 0" class="no-data">
+            <p>Aucune annonce de conducteur trouvée.</p>
         </div>
-      </div>
+
+        <div *ngFor="let annonce of annonces" class="annonce-card">
+            <div class="annonce-header">
+                <h3>Trajet #{{ annonce.id }}</h3>
+                <span class="date">{{ formatDate(annonce.dateCreation) }}</span>
+            </div>
+
+            <div class="annonce-body">
+                <div class="route-info">
+                    <div class="route-point depart">
+                        <i class="fa fa-map-marker"></i>
+                        <strong>Départ:</strong> {{ annonce.lieuDepart }}
+                    </div>
+
+                    <div *ngIf="annonce.etapesIntermediaires.length > 0" class="route-point etapes">
+                        <i class="fa fa-route"></i>
+                        <strong>Étapes:</strong> {{ formatEtapes(annonce.etapesIntermediaires) }}
+                    </div>
+
+                    <div class="route-point destination">
+                        <i class="fa fa-flag-checkered"></i>
+                        <strong>Destination:</strong> {{ annonce.destination }}
+                    </div>
+                </div>
+
+                <div class="annonce-details">
+                    <div class="detail-item">
+                        <i class="fa fa-users"></i>
+                        <span>Capacité: {{ annonce.capaciteDisponible }}</span>
+                    </div>
+
+                    <div class="detail-item">
+                        <i class="fa fa-box"></i>
+                        <span>Type marchandise: {{ annonce.typeMarchandiseAcceptee }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="annonce-actions">
+                <button class="btn btn-primary" (click)="modifierAnnonce(annonce.id)">
+                    <i class="fa fa-edit"></i> Modifier
+                </button>
+                <button class="btn btn-danger" (click)="supprimerAnnonce(annonce.id)">
+                    <i class="fa fa-trash"></i> Supprimer
+                </button>
+            </div>
+        </div>
     </div>
-  </div>
 </div>

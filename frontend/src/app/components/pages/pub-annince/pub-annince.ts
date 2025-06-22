@@ -1,214 +1,74 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { AnnouncementService, AnnonceTrajet, TypeMarchandise } from '../../../services/announcement.service';
+import { AnnonceTrajetDTO } from "../../../models/AnnonceTrajetDTO";
+import { AnnonceService } from "../../../services/annonce";
 
 @Component({
-  selector: 'app-pub-annince',
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  selector: 'app-pun-announce',
   templateUrl: './pub-annince.html',
-  styleUrl: './pub-annince.css'
+  styleUrls: ['./pub-annince.css'],
+  standalone: true,
+  imports: [CommonModule]
 })
 export class PubAnnince implements OnInit {
-  announcements: AnnonceTrajet[] = [];
-  filteredAnnouncements: AnnonceTrajet[] = [];
-  announcementForm: FormGroup;
-  searchForm: FormGroup;
-  isEditing = false;
-  editingId: number | null = null;
+  annonces: AnnonceTrajetDTO[] = [];
   loading = false;
-  errorMessage = '';
-  successMessage = '';
+  error: string | null = null;
 
-  // Search filters
-  searchDestination = '';
-  searchDateCreation = '';
-  searchTypeMarchandise = '';
-
-  // TypeMarchandise enum for template
-  TypeMarchandise = TypeMarchandise;
-  typeMarchandiseOptions = Object.values(TypeMarchandise);
-
-  constructor(
-    private announcementService: AnnouncementService,
-    private fb: FormBuilder,
-    private router: Router
-  ) {
-    this.announcementForm = this.fb.group({
-      lieuDepart: ['', Validators.required],
-      destination: ['', Validators.required],
-      capaciteDisponible: ['', [Validators.required, Validators.min(0)]],
-      typeMarchandiseAcceptee: ['', Validators.required],
-      etapesIntermediaires: ['']
-    });
-
-    this.searchForm = this.fb.group({
-      destination: [''],
-      dateCreation: [''],
-      typeMarchandise: ['']
-    });
-  }
+  constructor(private annonceService: AnnonceService) {}
 
   ngOnInit(): void {
-    this.loadAnnouncements();
+    this.loadAnnonces();
   }
 
-  loadAnnouncements(): void {
+  loadAnnonces(): void {
     this.loading = true;
-    this.announcementService.getAllAnnonces().subscribe({
-      next: (data) => {
-        this.announcements = data;
-        this.filteredAnnouncements = data;
+    this.error = null;
+
+    this.annonceService.getAllAnnoncesConducteurs().subscribe({
+      next: (data: AnnonceTrajetDTO[]) => {
+        this.annonces = data;
         this.loading = false;
       },
-      error: (error) => {
-        this.errorMessage = 'Erreur lors du chargement des annonces';
+      error: (error: any) => {
+        this.error = 'Erreur lors du chargement des annonces';
         this.loading = false;
-        console.error('Error loading announcements:', error);
+        console.error('Erreur:', error);
       }
     });
   }
 
-  searchAnnouncements(): void {
-    const searchData = this.searchForm.value;
-    this.loading = true;
-
-    this.announcementService.searchAnnonces(
-      searchData.destination || undefined,
-      searchData.dateCreation || undefined,
-      searchData.typeMarchandise || undefined
-    ).subscribe({
-      next: (data) => {
-        this.filteredAnnouncements = data;
-        this.loading = false;
-      },
-      error: (error) => {
-        this.errorMessage = 'Erreur lors de la recherche';
-        this.loading = false;
-        console.error('Error searching announcements:', error);
-      }
-    });
+  refreshAnnonces(): void {
+    this.loadAnnonces();
   }
 
-  clearSearch(): void {
-    this.searchForm.reset();
-    this.filteredAnnouncements = this.announcements;
+  formatDate(date: Date): string {
+    return new Date(date).toLocaleDateString('fr-FR');
   }
 
-  onSubmit(): void {
-    if (this.announcementForm.valid) {
-      this.loading = true;
-      const formData = this.announcementForm.value;
-      
-      // Convert etapesIntermediaires string to array
-      if (formData.etapesIntermediaires) {
-        formData.etapesIntermediaires = formData.etapesIntermediaires.split(',').map((etape: string) => etape.trim());
-      }
-
-      if (this.isEditing && this.editingId) {
-        // Update existing announcement
-        this.announcementService.updateAnnonce(this.editingId, formData).subscribe({
-          next: () => {
-            this.successMessage = 'Annonce mise à jour avec succès';
-            this.resetForm();
-            this.loadAnnouncements();
-            // Navigate to affichage-annonce page after successful update
-            setTimeout(() => {
-              this.router.navigate(['/affichage-annonce']);
-            }, 2000);
-          },
-          error: (error) => {
-            this.errorMessage = 'Erreur lors de la mise à jour';
-            this.loading = false;
-            console.error('Error updating announcement:', error);
-          }
-        });
-      } else {
-        // Create new announcement
-        this.announcementService.createAnnonce(formData).subscribe({
-          next: () => {
-            this.successMessage = 'Annonce créée avec succès ! Redirection vers la page d\'affichage...';
-            this.resetForm();
-            this.loadAnnouncements();
-            // Navigate to affichage-annonce page after successful creation
-            setTimeout(() => {
-              this.router.navigate(['/affichage-annonce']);
-            }, 2000);
-          },
-          error: (error) => {
-            this.errorMessage = 'Erreur lors de la création';
-            this.loading = false;
-            console.error('Error creating announcement:', error);
-          }
-        });
-      }
-    }
+  formatEtapes(etapes: string[]): string {
+    return etapes.join(' → ');
   }
 
-  // Navigate to affichage-annonce page
-  goToAffichageAnnonce(): void {
-    this.router.navigate(['/affichage-annonce']);
+  modifierAnnonce(id: number): void {
+    console.log('Modifier annonce avec ID:', id);
+    // TODO: Implémenter la logique de modification
+    // Par exemple, naviguer vers une page de modification
+    // this.router.navigate(['/modifier-annonce', id]);
   }
 
-  editAnnouncement(announcement: AnnonceTrajet): void {
-    this.isEditing = true;
-    this.editingId = announcement.id;
-    this.announcementForm.patchValue({
-      lieuDepart: announcement.lieuDepart,
-      destination: announcement.destination,
-      capaciteDisponible: announcement.capaciteDisponible,
-      typeMarchandiseAcceptee: announcement.typeMarchandiseAcceptee,
-      etapesIntermediaires: announcement.etapesIntermediaires?.join(', ')
-    });
-  }
-
-  deleteAnnouncement(id: number): void {
+  supprimerAnnonce(id: number): void {
     if (confirm('Êtes-vous sûr de vouloir supprimer cette annonce ?')) {
-      this.loading = true;
-      this.announcementService.deleteAnnonce(id).subscribe({
-        next: () => {
-          this.successMessage = 'Annonce supprimée avec succès';
-          this.loadAnnouncements();
-        },
-        error: (error) => {
-          this.errorMessage = 'Erreur lors de la suppression';
-          this.loading = false;
-          console.error('Error deleting announcement:', error);
-        }
-      });
+      console.log('Supprimer annonce avec ID:', id);
+      // TODO: Implémenter la logique de suppression
+      // this.annonceService.deleteAnnonce(id).subscribe({
+      //   next: () => {
+      //     this.loadAnnonces(); // Recharger la liste
+      //   },
+      //   error: (error) => {
+      //     console.error('Erreur lors de la suppression:', error);
+      //   }
+      // });
     }
-  }
-
-  cancelEdit(): void {
-    this.resetForm();
-  }
-
-  private resetForm(): void {
-    this.announcementForm.reset();
-    this.isEditing = false;
-    this.editingId = null;
-    this.loading = false;
-    this.errorMessage = '';
-    setTimeout(() => {
-      this.successMessage = '';
-    }, 3000);
-  }
-
-  getTypeMarchandiseLabel(type: TypeMarchandise): string {
-    const labels: { [key in TypeMarchandise]: string } = {
-      [TypeMarchandise.ELECTRONIQUE]: 'Électronique',
-      [TypeMarchandise.TEXTILE]: 'Textile et vêtements',
-      [TypeMarchandise.ALIMENTAIRE]: 'Produits alimentaires',
-      [TypeMarchandise.FRAGILE]: 'Objets fragiles',
-      [TypeMarchandise.DOCUMENTS]: 'Documents et papiers',
-      [TypeMarchandise.LIVRES]: 'Livres et publications',
-      [TypeMarchandise.MOBILIER]: 'Mobilier et décoration',
-      [TypeMarchandise.MEDICAL]: 'Matériel médical',
-      [TypeMarchandise.AUTOMOBILE]: 'Pièces automobiles',
-      [TypeMarchandise.SPORT]: 'Équipement sportif',
-      [TypeMarchandise.AUTRE]: 'Autre type'
-    };
-    return labels[type] || type;
   }
 }
