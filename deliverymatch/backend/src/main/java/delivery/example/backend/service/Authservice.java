@@ -21,20 +21,23 @@ public class Authservice {
     // Enregistre un nouvel utilisateur avec un rôle spécifié
     public User registerUser(RegisterDTO registerDTO, String role) {
         User newUser;
-        if(role.equals("admin")) {
+
+        if(role.equalsIgnoreCase("admin")) {
             newUser = new Administrateur();
-            //newUser.setRole(Role.ADMIN);
-        } else if (role.equals("conducteur")) {
+            newUser.setRole(Role.ADMIN);
+        } else if (role.equalsIgnoreCase("conducteur")) {
             newUser = new Conducteur();
-            //newUser.setRole(Role.CONDUCTEUR);
+            newUser.setRole(Role.CONDUCTEUR);
         } else {
             newUser = new Expediteur();
-            //newUser.setRole(Role.EXPEDITEUR);
+            newUser.setRole(Role.EXPEDITEUR);
         }
+
         newUser.setFullName(registerDTO.fullName());
         newUser.setEmail(registerDTO.email());
         newUser.setPassword(passwordEncoder.encode(registerDTO.password()));
 
         return userRepository.save(newUser);
     }
+
 }

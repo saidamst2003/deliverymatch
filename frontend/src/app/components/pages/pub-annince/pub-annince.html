@@ -1,0 +1,71 @@
+<div class="annonces-container">
+    <div class="header">
+        <h2>Annonces Conducteurs</h2>
+        <button class="btn btn-refresh" (click)="refreshAnnonces()">
+            <i class="fa fa-refresh"></i> Actualiser
+        </button>
+    </div>
+
+    <div *ngIf="loading" class="loading">
+        <div class="spinner"></div>
+        <p>Chargement des annonces...</p>
+    </div>
+
+    <div *ngIf="error" class="error-message">
+        <i class="fa fa-exclamation-triangle"></i>
+        {{ error }}
+    </div>
+
+    <div *ngIf="!loading && !error" class="annonces-list">
+        <div *ngIf="annonces.length === 0" class="no-data">
+            <p>Aucune annonce de conducteur trouvée.</p>
+        </div>
+
+        <div *ngFor="let annonce of annonces" class="annonce-card">
+            <div class="annonce-header">
+                <h3>Trajet #{{ annonce.id }}</h3>
+                <span class="date">{{ formatDate(annonce.dateCreation) }}</span>
+            </div>
+
+            <div class="annonce-body">
+                <div class="route-info">
+                    <div class="route-point depart">
+                        <i class="fa fa-map-marker"></i>
+                        <strong>Départ:</strong> {{ annonce.lieuDepart }}
+                    </div>
+
+                    <div *ngIf="annonce.etapesIntermediaires.length > 0" class="route-point etapes">
+                        <i class="fa fa-route"></i>
+                        <strong>Étapes:</strong> {{ formatEtapes(annonce.etapesIntermediaires) }}
+                    </div>
+
+                    <div class="route-point destination">
+                        <i class="fa fa-flag-checkered"></i>
+                        <strong>Destination:</strong> {{ annonce.destination }}
+                    </div>
+                </div>
+
+                <div class="annonce-details">
+                    <div class="detail-item">
+                        <i class="fa fa-users"></i>
+                        <span>Capacité: {{ annonce.capaciteDisponible }}</span>
+                    </div>
+
+                    <div class="detail-item">
+                        <i class="fa fa-box"></i>
+                        <span>Type marchandise: {{ annonce.typeMarchandiseAcceptee }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="annonce-actions">
+                <button class="btn btn-primary" (click)="modifierAnnonce(annonce.id)">
+                    <i class="fa fa-edit"></i> Modifier
+                </button>
+                <button class="btn btn-danger" (click)="supprimerAnnonce(annonce.id)">
+                    <i class="fa fa-trash"></i> Supprimer
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

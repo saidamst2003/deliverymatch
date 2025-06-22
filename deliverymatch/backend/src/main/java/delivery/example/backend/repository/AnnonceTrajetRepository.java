@@ -11,7 +11,6 @@ import java.util.List;
 
 public interface AnnonceTrajetRepository extends JpaRepository<AnnonceTrajet, Integer> {
 
-    // Recherche les annonces de trajet selon des critères optionnels (destination, date de création, type de marchandise)
     @Query("SELECT a FROM AnnonceTrajet a " +
             "WHERE (:destination IS NULL OR a.destination = :destination) " +
             "AND (:dateCreation IS NULL OR a.dateCreation = :dateCreation) " +
@@ -19,7 +18,7 @@ public interface AnnonceTrajetRepository extends JpaRepository<AnnonceTrajet, In
     List<AnnonceTrajet> findByCriteria(@Param("destination") String destination,
                                        @Param("dateCreation") LocalDate dateCreation,
                                        @Param("typeMarchandise") TypeMarchandise typeMarchandise);
-
-    // Trouve toutes les annonces de trajet qui sont associées à un conducteur (non null)
+    //find all annonce by conducteur
     List<AnnonceTrajet> findAllByConducteurIsNotNull();
 }
+

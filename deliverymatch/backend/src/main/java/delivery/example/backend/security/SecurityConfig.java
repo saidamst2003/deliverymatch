@@ -54,6 +54,7 @@ public class SecurityConfig {
                                 "/user/register"
                         )
                         .permitAll()
+                        .requestMatchers("/api/annonces-trajet/publier/**").hasRole("CONDUCTEUR")
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

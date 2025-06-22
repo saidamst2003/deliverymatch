@@ -2,13 +2,16 @@ package delivery.example.backend.controller;
 
 import delivery.example.backend.dto.AnnonceTrajetDTO;
 import delivery.example.backend.model.AnnonceTrajet;
+import delivery.example.backend.model.Conducteur;
 import delivery.example.backend.model.TypeMarchandise;
+import delivery.example.backend.repository.AnnonceTrajetRepository;
 import delivery.example.backend.service.AnnonceTrajetService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -23,11 +26,12 @@ import java.util.Optional;
 public class AnnonceTrajetController {
 
     private final AnnonceTrajetService annonceTrajetService;
-
+private final AnnonceTrajetRepository annonceTrajetRepository;
     // Constructeur pour l'injection de dépendances
     @Autowired
-    public AnnonceTrajetController(AnnonceTrajetService annonceTrajetService) {
+    public AnnonceTrajetController(AnnonceTrajetService annonceTrajetService, AnnonceTrajetRepository annonceTrajetRepository) {
         this.annonceTrajetService = annonceTrajetService;
+        this.annonceTrajetRepository = annonceTrajetRepository;
     }
 
     // Publie une nouvelle annonce de trajet pour un conducteur donné
@@ -54,13 +58,14 @@ public class AnnonceTrajetController {
         List<AnnonceTrajet> resultats = annonceTrajetService.chercherAnnonces(destination, dateCreation, typeMarchandise);
         return ResponseEntity.ok(resultats);
     }
-
-    // Récupère toutes les annonces de trajet pour les conducteurs (accès admin)
+    // Controller
     @GetMapping("/admin/annonces-conducteurs")
-    public ResponseEntity<List<AnnonceTrajet>> getAllAnnoncesConducteurs() {
-        List<AnnonceTrajet> annonces = annonceTrajetService.getAllAnnoncesConducteurs();
-        return ResponseEntity.ok(annonces);
+    public ResponseEntity<List<AnnonceTrajetDTO>> getAllAnnoncesConducteurs() {
+        List<AnnonceTrajetDTO> annoncesDto = annonceTrajetService.getAllAnnoncesConducteurs();
+        return ResponseEntity.ok(annoncesDto);
     }
+
+
 
     // Modifie une annonce de trajet existante (accès admin)
     @PutMapping("/admin/annonces-conducteurs/{id}")
