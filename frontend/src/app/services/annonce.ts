@@ -19,4 +19,9 @@ export class AnnonceService {
   deleteAnnonce(id: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/annonces-trajet/admin/annonces-conducteurs/${id}`);
   }
+
+  updateAnnonce(id: number, annonce: AnnonceTrajetDTO): Observable<AnnonceTrajetDTO> {
+    const url = `http://localhost:8081/api/annonces-trajet/admin/annonces-conducteurs/${id}`;
+    return this.http.put<AnnonceTrajetDTO>(url, annonce);
+  }
 }

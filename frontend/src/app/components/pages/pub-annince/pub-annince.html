@@ -58,7 +58,7 @@
                 </div>
             </div>
 
-            <div class="annonce-actions">
+            <div class="annonce-actions" *ngIf="userRole === 'ADMIN'">
                 <button class="btn btn-primary" (click)="modifierAnnonce(annonce.id)">
                     <i class="fa fa-edit"></i> Modifier
                 </button>
@@ -68,4 +68,37 @@
             </div>
         </div>
     </div>
+</div>
+
+<!-- Modal de modification -->
+<div *ngIf="isEditModalVisible" class="modal-overlay">
+  <div class.="modal-content">
+    <h2>Modifier l'annonce</h2>
+    <form *ngIf="annonceEnCoursDeModification" (ngSubmit)="sauvegarderModification()">
+      <div class="form-group">
+        <label for="lieuDepart">Lieu de départ</label>
+        <input type="text" id="lieuDepart" [(ngModel)]="annonceEnCoursDeModification.lieuDepart" name="lieuDepart" required>
+      </div>
+      <div class="form-group">
+        <label for="destination">Destination</label>
+        <input type="text" id="destination" [(ngModel)]="annonceEnCoursDeModification.destination" name="destination" required>
+      </div>
+        <div class="form-group">
+            <label for="etapesIntermediaires">Étapes intermédiaires (séparées par des virgules)</label>
+            <input type="text" id="etapesIntermediaires" [(ngModel)]="annonceEnCoursDeModification.etapesIntermediaires" name="etapesIntermediaires">
+        </div>
+      <div class="form-group">
+        <label for="capaciteDisponible">Capacité disponible</label>
+        <input type="number" id="capaciteDisponible" [(ngModel)]="annonceEnCoursDeModification.capaciteDisponible" name="capaciteDisponible" required>
+      </div>
+      <div class="form-group">
+        <label for="typeMarchandiseAcceptee">Type de marchandise acceptée</label>
+        <input type="text" id="typeMarchandiseAcceptee" [(ngModel)]="annonceEnCoursDeModification.typeMarchandiseAcceptee" name="typeMarchandiseAcceptee" required>
+      </div>
+      <div class="modal-actions">
+        <button type="submit" class="btn btn-primary">Sauvegarder</button>
+        <button type="button" class="btn btn-secondary" (click)="annulerModification()">Annuler</button>
+      </div>
+    </form>
+  </div>
 </div>
