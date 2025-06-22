@@ -9,6 +9,11 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const token = authService.getToken();
   console.log(`Interceptor for URL: ${req.url}, Token: ${token}`);
 
+  // Do not add token for login or register requests
+  if (req.url.includes('/user/login') || req.url.includes('/user/register')) {
+    return next(req);
+  }
+
   if (token) {
     const authReq = req.clone({
       setHeaders: {

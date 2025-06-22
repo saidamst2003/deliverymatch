@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 export class AuthService {
   private http = inject(HttpClient);
   private apiUrl = 'http://localhost:8081';
-  private tokenKey = 'authToken'; // The single source of truth for the key
+  private tokenKey = 'token'; // Use a consistent key, e.g., 'token'
 
   private _user = new BehaviorSubject<User | null>(null);
   public user$ = this._user.asObservable();
@@ -31,7 +31,7 @@ export class AuthService {
   }
 
   private isBrowser(): boolean {
-    return typeof window !== 'undefined' && typeof sessionStorage !== 'undefined';
+    return typeof window !== 'undefined' && typeof localStorage !== 'undefined';
   }
 
   login(loginRequest: LoginRequest): Observable<any> {
@@ -39,9 +39,9 @@ export class AuthService {
       tap(response => {
         if (response && response.token) {
           if (this.isBrowser()) {
-            sessionStorage.setItem(this.tokenKey, response.token);
+            localStorage.setItem(this.tokenKey, response.token);
             this.updateState(response.token);
-            console.log('AuthService: Token stored successfully.');
+            console.log('AuthService: Token stored successfully in localStorage.');
           }
         } else {
           console.log('AuthService: Login response did not contain a token.');
@@ -52,10 +52,11 @@ export class AuthService {
 
   logout(): void {
     if (this.isBrowser()) {
-      sessionStorage.removeItem(this.tokenKey);
+      localStorage.removeItem(this.tokenKey);
     }
     this._user.next(null);
     this._isAuthenticated.next(false);
+    this.router.navigate(['/login']);
   }
 
   isAuthenticated(): boolean {
@@ -65,7 +66,7 @@ export class AuthService {
 
   getToken(): string | null {
     if (this.isBrowser()) {
-      return sessionStorage.getItem(this.tokenKey);
+      return localStorage.getItem(this.tokenKey);
     }
     return null;
   }

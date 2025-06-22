@@ -1,8 +1,8 @@
 <div class="pub-header">
   <h2> Annonces Conducteurs</h2>
-  <button class="btn-create" routerLink="/mes-trajet">
+  <a class="btn-create" [routerLink]="['/dashboard']">
     <i class="fa fa-plus"></i> Nouvelle annonce
-  </button>
+  </a>
 </div>
 
 <div *ngIf="loading" class="loading">
@@ -34,7 +34,7 @@
       <div><strong>Capacité:</strong> {{ annonce.capaciteDisponible }} kg</div>
       <div><strong>Type marchandise:</strong> {{ annonce.typeMarchandiseAcceptee }}</div>
     </div>
-    <div class="pub-card-actions" *ngIf="userRole === 'ADMIN'">
+    <div class="pub-card-actions" *ngIf="userRole && userRole.toUpperCase() === 'ADMIN'">
       <button class="btn-edit" (click)="modifierAnnonce(annonce.id)">
         <i class="fa fa-edit"></i> Modifier
       </button>

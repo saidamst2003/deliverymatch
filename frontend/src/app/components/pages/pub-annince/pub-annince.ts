@@ -4,13 +4,14 @@ import { AnnonceTrajetDTO } from "../../../models/AnnonceTrajetDTO";
 import { AnnonceService } from "../../../services/annonce";
 import { FormsModule } from '@angular/forms';
 import { Location } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-pun-announce',
   templateUrl: './pub-annince.html',
   styleUrls: ['./pub-annince.css'],
   standalone: true,
-  imports: [CommonModule, FormsModule]
+  imports: [CommonModule, FormsModule, RouterModule]
 })
 export class PubAnnince implements OnInit {
   annonces: AnnonceTrajetDTO[] = [];
@@ -24,16 +25,22 @@ export class PubAnnince implements OnInit {
 
   ngOnInit(): void {
     this.userRole = this.getUserRole();
+    console.log('Rôle de l\'utilisateur:', this.userRole);
     this.loadAnnonces();
   }
 
   getUserRole(): string | null {
-    const token = localStorage.getItem('token');
-    if (!token) return null;
     try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.warn('Token non trouvé dans localStorage.');
+        return null;
+      }
       const payload = JSON.parse(atob(token.split('.')[1]));
-      return payload.role || null;
-    } catch {
+      console.log('JWT Payload:', payload);
+      return payload.role || payload.roles?.[0] || null;
+    } catch (e) {
+      console.error('Erreur lors du décodage du token:', e);
       return null;
     }
   }
