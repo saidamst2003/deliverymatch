@@ -54,10 +54,23 @@ public class AnnonceTrajetService {
         return annonceTrajetRepository.findByCriteria(destination, dateCreation, typeMarchandise);
     }
 
-//    // Récupère toutes les annonces de trajet associées à un conducteur
-//    public List<AnnonceTrajet> getAllAnnoncesConducteurs() {
-//        return annonceTrajetRepository.findAllByConducteurIsNotNull();
-//    }
+
+    public List<AnnonceTrajetDTO> getAllAnnoncesConducteurs() {
+        List<AnnonceTrajet> annonces = annonceTrajetRepository.findAllByConducteurIsNotNull();
+
+        return annonces.stream()
+                .map(a -> new AnnonceTrajetDTO(
+                        a.getId(),
+                        a.getLieuDepart(),
+                        a.getEtapesIntermediaires(),
+                        a.getDestination(),
+                        a.getCapaciteDisponible(),
+                        a.getDateCreation(),
+                        a.getTypeMarchandiseAcceptee()
+                ))
+                .toList();
+    }
+
 
     // Met à jour les détails d'une annonce de trajet existante par son ID
     public AnnonceTrajet updateAnnonce(Integer id, AnnonceTrajet updatedAnnonce) {

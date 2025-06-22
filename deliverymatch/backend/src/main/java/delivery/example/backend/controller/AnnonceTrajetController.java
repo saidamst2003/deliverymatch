@@ -58,18 +58,12 @@ private final AnnonceTrajetRepository annonceTrajetRepository;
         List<AnnonceTrajet> resultats = annonceTrajetService.chercherAnnonces(destination, dateCreation, typeMarchandise);
         return ResponseEntity.ok(resultats);
     }
-
-    // Récupère toutes les annonces de trajet pour les conducteurs (accès admin)
-//    @GetMapping("/mes-annonces")
-//    public ResponseEntity<List<AnnonceTrajet>> getMesAnnonces(Authentication authentication) {
-//        String email = authentication.getName(); // أو كيفما كتخزن اسم المستخدم فالتوكن
-//        Conducteur conducteur = conducteurService.findByEmail(email);
-//        if (conducteur == null) {
-//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-//        }
-//        List<AnnonceTrajet> annonces = annonceTrajetRepository.findByConducteur(conducteur);
-//        return ResponseEntity.ok(annonces);
-//    }
+    // Controller
+    @GetMapping("/admin/annonces-conducteurs")
+    public ResponseEntity<List<AnnonceTrajetDTO>> getAllAnnoncesConducteurs() {
+        List<AnnonceTrajetDTO> annoncesDto = annonceTrajetService.getAllAnnoncesConducteurs();
+        return ResponseEntity.ok(annoncesDto);
+    }
 
 
 
