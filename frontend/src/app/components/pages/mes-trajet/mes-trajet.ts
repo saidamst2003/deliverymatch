@@ -2,7 +2,8 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormArray, Validators, ReactiveFormsModule } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+import { Location } from '@angular/common';
 
 // Types et interfaces
 export interface AnnonceTrajetDTO {
@@ -27,7 +28,7 @@ export enum TypeMarchandise {
 @Component({
   selector: 'app-mes-trajet',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './mes-trajet.html',
   styleUrl: './mes-trajet.css'
 })
@@ -136,15 +137,9 @@ export class MesTrajet implements OnInit {
             this.isLoading = false;
             this.successMessage = 'Annonce publiée avec succès !';
             console.log('Annonce créée:', response);
-
-            // التوجيه مباشرة لصفحة /pub بعد نجاح النشر
             this.router.navigate(['/pub']);
 
-            // إذا بغيت تفرغ الفورم قبل التنقل (اختياري)
-            // setTimeout(() => {
-            //   this.resetForm();
-            //   this.successMessage = '';
-            // }, 3000);
+
           },
           error: (error) => {
             this.isLoading = false;
@@ -183,7 +178,9 @@ export class MesTrajet implements OnInit {
     this.errorMessage = '';
   }
 
-  goBack() {
-    this.router.navigate(['/pub']);
+  private location = inject(Location);
+
+  logVoirAnnonces(): void {
+    console.log('Bouton Voir toutes les annonces cliqué');
   }
 }

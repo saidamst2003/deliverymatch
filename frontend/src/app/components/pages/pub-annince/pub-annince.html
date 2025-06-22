@@ -6,6 +6,14 @@
         </button>
     </div>
 
+    <!-- Ajout de la phrase et des boutons -->
+    <div class="annonce-navigation">
+        <span>Voir les annonces ? <a routerLink="/affichage-annonce">Cliquez ici</a></span>
+        <button class="btn btn-success" routerLink="/pub-annince">
+            <i class="fa fa-plus"></i> Créer une annonce
+        </button>
+    </div>
+
     <div *ngIf="loading" class="loading">
         <div class="spinner"></div>
         <p>Chargement des annonces...</p>
@@ -72,7 +80,7 @@
 
 <!-- Modal de modification -->
 <div *ngIf="isEditModalVisible" class="modal-overlay">
-  <div class.="modal-content">
+  <div class="modal-content">
     <h2>Modifier l'annonce</h2>
     <form *ngIf="annonceEnCoursDeModification" (ngSubmit)="sauvegarderModification()">
       <div class="form-group">
@@ -98,6 +106,14 @@
       <div class="modal-actions">
         <button type="submit" class="btn btn-primary">Sauvegarder</button>
         <button type="button" class="btn btn-secondary" (click)="annulerModification()">Annuler</button>
+      </div>
+      <div class="form-group" style="text-align: right; margin-top: 10px;">
+        <button type="button"
+                (click)="goBack()"
+                class="px-4 py-2 text-sm font-bold rounded-lg transition-transform transform hover:scale-105 bg-blue-700 text-white">
+          <i class="fa fa-list"></i> Voir toutes les annonces
+        </button>
+
       </div>
     </form>
   </div>

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { AnnonceTrajetDTO } from "../../../models/AnnonceTrajetDTO";
 import { AnnonceService } from "../../../services/annonce";
 import { FormsModule } from '@angular/forms';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-pun-announce',
@@ -19,7 +20,7 @@ export class PubAnnince implements OnInit {
   annonceEnCoursDeModification: AnnonceTrajetDTO | null = null;
   userRole: string | null = null;
 
-  constructor(private annonceService: AnnonceService) {}
+  constructor(private annonceService: AnnonceService, private location: Location) {}
 
   ngOnInit(): void {
     this.userRole = this.getUserRole();
@@ -120,5 +121,9 @@ export class PubAnnince implements OnInit {
         }
       });
     }
+  }
+
+  goBack(): void {
+    this.location.back();
   }
 }

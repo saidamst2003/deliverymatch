@@ -114,6 +114,12 @@
           Réinitialiser
         </button>
       </div>
+      <div class="flex flex-col items-end mt-2">
+        <a class="px-4 py-2 text-sm font-bold rounded-lg transition-transform transform hover:scale-105 bg-blue-700 text-white flex items-center"
+           [routerLink]="['/pub']" (click)="logVoirAnnonces()">
+          <i class="fa fa-list"></i> Voir toutes les annonces
+        </a>
+      </div>
     </form>
 
     <!-- Success/Error Messages -->
