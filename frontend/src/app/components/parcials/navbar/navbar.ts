@@ -1,7 +1,9 @@
 // navbar.component.ts
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule, Router } from '@angular/router';
+import { RouterModule } from '@angular/router';
+import { AuthService } from '../../../services/auth';
+import { Observable } from 'rxjs';
 
 export interface User {
   id: string;
@@ -20,6 +22,15 @@ export interface User {
   styleUrls: ['./navbar.css']
 })
 export class NavbarComponent {
+  private authService = inject(AuthService);
+  isAuthenticated$: Observable<boolean>;
 
+  constructor() {
+    this.isAuthenticated$ = this.authService.isAuthenticated$;
+  }
+
+  logout(): void {
+    this.authService.logout();
+  }
 }
 

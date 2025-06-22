@@ -1,3 +1,13 @@
+:root {
+  --moss-green: #8A9A5B;
+  --khaki: #BCB88A;
+}
+
+html, body {
+  background: linear-gradient(135deg, #f7f6ed 0%, #e9e7d7 100%);
+  min-height: 100vh;
+}
+
 .annonces-container {
   padding: 20px;
   max-width: 1200px;
@@ -43,6 +53,14 @@
   background-color: #6c757d;
   color: white;
   margin-left: 10px;
+}
+
+.btn-danger {
+  background-color: #dc3545;
+}
+
+.btn-danger:hover {
+  background-color: #c82333;
 }
 
 .loading {
@@ -182,4 +200,235 @@
   .annonce-actions {
     text-align: center;
   }
+}
+
+/* Styles for Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  max-width: 500px;
+}
+
+.modal-content h2 {
+  margin-top: 0;
+  font-size: 1.5rem;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 600;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+}
+
+.btn-secondary:hover {
+  background-color: #5a6268;
+}
+
+/* Modern header for pub-annince */
+.pub-header {
+  background: var(--khaki);
+  color: var(--moss-green);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding: 1rem 2rem;
+  border-radius: 10px;
+}
+
+.pub-header h2 {
+  color:#333;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.btn-create {
+  background: var(--khaki);
+  color: #333;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-create:hover {
+  background: var(--moss-green);
+  color: var(--khaki);
+}
+
+.pub-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+.pub-card {
+  position: relative;
+  background: #013220;
+  color: #BCB88A;
+  border-radius: 14px;
+  box-shadow: 0 2px 12px #01322022;
+  border: 1.5px solid #BCB88A;
+  padding: 1.2rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  transition: box-shadow 0.3s;
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: center;
+  overflow: visible;
+  min-width: 0;
+  max-width: 320px;
+  margin: 0 auto;
+}
+
+.pub-card::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 18px;
+  background: linear-gradient(90deg, #013220 0%, #BCB88A 100%);
+  filter: blur(12px);
+  opacity: 0.25;
+  transition: opacity 0.7s;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.pub-card:hover::before {
+  opacity: 1;
+  transition: opacity 0.2s;
+}
+
+.pub-card-header, .pub-card-body, .pub-card-actions {
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.pub-card-header {
+  flex-direction: row;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.pub-card-body > div {
+  margin-bottom: 0.2rem;
+  color: #e0e0c0;
+  font-size: 0.97rem;
+}
+
+.btn-edit, .btn-delete {
+  font-size: 0.97rem;
+  padding: 5px 10px;
+}
+
+.pub-card-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-size: 1rem;
+  color: #BCB88A;
+  margin-bottom: 0.5rem;
+}
+
+.pub-id {
+  font-weight: bold;
+  color: #BCB88A;
+}
+
+.pub-date {
+  font-size: 0.9rem;
+  color: #e0e0c0;
+}
+
+.pub-card-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.btn-edit {
+  background: #BCB88A;
+  color: #013220;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1rem;
+  transition: background 0.2s, color 0.2s, transform 0.2s;
+}
+.btn-edit:hover {
+  background: #013220;
+  color: #BCB88A;
+  border: 1.5px solid #BCB88A;
+}
+
+.btn-delete {
+  background: #dc3545;
+  color: #fff;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1rem;
+  transition: background 0.2s, color 0.2s, transform 0.2s;
+}
+.btn-delete:hover {
+  background: #c82333;
+}
+
+@keyframes fadeInCard {
+  from { opacity: 0; transform: translateY(30px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Remove background from .pub-list and .annonces-container if present */
+.pub-list, .annonces-container {
+  background: none !important;
 }

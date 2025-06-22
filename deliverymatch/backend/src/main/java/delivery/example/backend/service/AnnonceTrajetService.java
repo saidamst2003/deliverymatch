@@ -71,17 +71,17 @@ public class AnnonceTrajetService {
                 .toList();
     }
 
+//modifier un annonce
 
-    // Met à jour les détails d'une annonce de trajet existante par son ID
-    public AnnonceTrajet updateAnnonce(Integer id, AnnonceTrajet updatedAnnonce) {
+    public AnnonceTrajet updateAnnonce(Integer id, AnnonceTrajetDTO updatedAnnonceDto) {
 
         AnnonceTrajet annonce = annonceTrajetRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Annonce non trouvée avec id " + id));
-        annonce.setLieuDepart(updatedAnnonce.getLieuDepart());
-        annonce.setDestination(updatedAnnonce.getDestination());
-        annonce.setCapaciteDisponible(updatedAnnonce.getCapaciteDisponible());
-        annonce.setTypeMarchandiseAcceptee(updatedAnnonce.getTypeMarchandiseAcceptee());
-        annonce.setEtapesIntermediaires(updatedAnnonce.getEtapesIntermediaires());
+        annonce.setLieuDepart(updatedAnnonceDto.lieuDepart());
+        annonce.setDestination(updatedAnnonceDto.destination());
+        annonce.setCapaciteDisponible(updatedAnnonceDto.capaciteDisponible());
+        annonce.setTypeMarchandiseAcceptee(updatedAnnonceDto.typeMarchandiseAcceptee());
+        annonce.setEtapesIntermediaires(updatedAnnonceDto.etapesIntermediaires());
 
         return annonceTrajetRepository.save(annonce);
     }
@@ -91,7 +91,6 @@ public class AnnonceTrajetService {
         return annonceTrajetRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Annonce non trouvée avec id " + id));
     }
-
     // Supprime une annonce de trajet par son ID
     public void delete(Integer id) {
         AnnonceTrajet annonce = findById(id);

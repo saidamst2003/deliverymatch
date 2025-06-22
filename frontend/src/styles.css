@@ -1,3 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --moss-green: #8A9A5B;
+  --khaki: #BCB88A;
+}
+
+/* Existing global styles ... */

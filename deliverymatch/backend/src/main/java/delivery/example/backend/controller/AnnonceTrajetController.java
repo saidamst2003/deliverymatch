@@ -69,12 +69,22 @@ private final AnnonceTrajetRepository annonceTrajetRepository;
 
     // Modifie une annonce de trajet existante (accès admin)
     @PutMapping("/admin/annonces-conducteurs/{id}")
-    public ResponseEntity<AnnonceTrajet> updateAnnonce(
+    public ResponseEntity<AnnonceTrajetDTO> updateAnnonce(
             @PathVariable Integer id,
-            @RequestBody AnnonceTrajet updatedAnnonce) {
-        AnnonceTrajet annonce = annonceTrajetService.updateAnnonce(id, updatedAnnonce);
-        return ResponseEntity.ok(annonce);
+            @RequestBody AnnonceTrajetDTO updatedAnnonceDto) {
+        AnnonceTrajet updatedAnnonce = annonceTrajetService.updateAnnonce(id, updatedAnnonceDto);
+        AnnonceTrajetDTO responseDto = new AnnonceTrajetDTO(
+                updatedAnnonce.getId(),
+                updatedAnnonce.getLieuDepart(),
+                updatedAnnonce.getEtapesIntermediaires(),
+                updatedAnnonce.getDestination(),
+                updatedAnnonce.getCapaciteDisponible(),
+                updatedAnnonce.getDateCreation(),
+                updatedAnnonce.getTypeMarchandiseAcceptee()
+        );
+        return ResponseEntity.ok(responseDto);
     }
+
 
     // Supprime une annonce de trajet par son ID (accès admin)
     @DeleteMapping("/admin/annonces-conducteurs/{id}")

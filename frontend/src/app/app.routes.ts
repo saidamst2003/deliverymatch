@@ -3,9 +3,9 @@ import { LoginComponent } from './components/pages/login/login';
 import { LayoutComponent } from './components/layout/layout/layout';
 import { AccueilComponent } from './components/pages/accueil/accueil';
 import { MesTrajet } from './components/pages/mes-trajet/mes-trajet';
-import { PubAnnince } from './components/pages/pub-annince/pub-annince';
 import { AffichageAnnonce } from './components/pages/affichage-annonce/affichage-annonce';
 import { authGuard } from './guards/auth-guard';
+import {PubAnnince} from './components/pages/pub-annince/pub-annince';
 
 export const routes: Routes = [
   {
