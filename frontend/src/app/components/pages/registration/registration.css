@@ -1,29 +1,51 @@
 .register-form {
+  background: rgba(1, 50, 32, 0.80); /* #013220 with 80% opacity */
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: -6px 3px 20px 4px #0000007d;
+  border-radius: 18px;
+  border: 1.5px solid rgba(138, 154, 91, 0.25);
+  padding: 2rem 2.5rem 1.5rem 2.5rem;
+  margin: 2.5rem auto;
   max-width: 400px;
-  margin: 2rem auto;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 2px 12px #01322022;
-  padding: 2rem;
+  position: relative;
+  overflow: visible;
 }
 .register-form h2 {
   text-align: center;
   margin-bottom: 1.5rem;
+  color: var(--moss-green);
+  font-weight: bold;
+  letter-spacing: 1px;
 }
 .form-group {
   margin-bottom: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  position: relative;
 }
 label {
-  font-weight: 600;
-  margin-bottom: 0.3rem;
-  display: block;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+  color: var(--moss-green);
+  letter-spacing: 0.5px;
 }
 input, select {
-  width: 100%;
-  padding: 0.7rem;
-  border-radius: 6px;
-  border: 1px solid #BCB88A;
+  padding: 0.85rem 1.2rem 0.85rem 2.5rem;
+  border: 1.5px solid #BCB88A;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.7);
   font-size: 1rem;
+  color: #013220;
+  transition: border 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 8px rgba(138,154,91,0.07);
+}
+input:focus, select:focus {
+  border: 1.5px solid var(--moss-green);
+  outline: none;
+  box-shadow: 0 0 0 2px #8A9A5B33;
+  background: #f7f6ed;
 }
 .error {
   color: #dc3545;
@@ -38,17 +60,33 @@ input, select {
 }
 .btn.btn-primary {
   width: 100%;
-  background: var(--moss-green, #8A9A5B);
-  color: #fff;
+  background: linear-gradient(90deg, #8A9A5B 0%, #BCB88A 100%);
+  color: #013220;
   border: none;
-  padding: 0.9rem;
-  border-radius: 6px;
-  font-weight: bold;
+  border-radius: 10px;
+  padding: 0.85rem 2.2rem 0.85rem 2.2rem;
   font-size: 1.1rem;
-  cursor: pointer;
+  font-weight: bold;
+  box-shadow: 0 2px 8px rgba(138,154,91,0.13);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.7rem;
+  transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
   margin-top: 1rem;
+}
+.btn.btn-primary:hover {
+  background: linear-gradient(90deg, #BCB88A 0%, #8A9A5B 100%);
+  color: #013220;
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 4px 16px rgba(138,154,91,0.18);
 }
 .btn.btn-primary:disabled {
   background: #ccc;
   cursor: not-allowed;
+}
+@media (max-width: 600px) {
+  .register-form {
+    padding: 1.2rem 0.5rem;
+  }
 } 
