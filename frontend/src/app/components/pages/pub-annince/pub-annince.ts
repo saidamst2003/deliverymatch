@@ -6,11 +6,6 @@ import { FormsModule } from '@angular/forms';
 import { Location } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
-// We'll create a new type for the form to handle the etapes as a string
-interface AnnonceTrajetFormDTO extends Omit<AnnonceTrajetDTO, 'etapesIntermediaires'> {
-  etapesIntermediairesString?: string;
-}
-
 @Component({
   selector: 'app-pun-announce',
   templateUrl: './pub-annince.html',
@@ -25,7 +20,7 @@ export class PubAnnince implements OnInit {
   loading = false;
   error: string | null = null;
   isEditModalVisible = false;
-  annonceEnCoursDeModification: AnnonceTrajetFormDTO | null = null;
+  annonceEnCoursDeModification: any = null;
   userRole: string | null = null;
 
   constructor(private annonceService: AnnonceService, private location: Location) {}
@@ -38,27 +33,31 @@ export class PubAnnince implements OnInit {
 
   getUserRole(): string | null {
     try {
-      // Check multiple possible token storage locations
-      const token = localStorage.getItem('token') || 
-                   localStorage.getItem('authToken') || 
-                   sessionStorage.getItem('token') || 
-                   sessionStorage.getItem('authToken');
-      
+      const token = localStorage.getItem('token');
       if (!token) {
-        console.warn('Aucun token trouvé dans localStorage ou sessionStorage.');
+        console.warn('Token non trouvé dans localStorage.');
         return null;
       }
-      
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      
-      // Try multiple possible role field names, common in Spring Security
-      const role = payload.role || 
-                  (payload.roles && payload.roles[0]) || 
-                  payload.authority || 
-                  (payload.authorities && payload.authorities[0]) || 
-                  null;
-      
-      return role;
+
+      // Décodage du payload JWT
+      const payloadJson = atob(token.split('.')[1]);
+      const payload = JSON.parse(payloadJson);
+
+      console.log('JWT Payload:', payload);
+
+      // Essaie de lire le rôle selon différentes clés possibles
+      if (payload.role) {
+        return payload.role;
+      }
+      if (payload.roles && Array.isArray(payload.roles) && payload.roles.length > 0) {
+        return payload.roles[0];
+      }
+      if (payload.authorities && Array.isArray(payload.authorities) && payload.authorities.length > 0) {
+        return payload.authorities[0];
+      }
+
+      // Si aucune propriété trouvée, retourne null
+      return null;
     } catch (e) {
       console.error('Erreur lors du décodage du token:', e);
       return null;
@@ -68,17 +67,16 @@ export class PubAnnince implements OnInit {
   loadAnnonces(): void {
     this.loading = true;
     this.error = null;
-
     this.annonceService.getAllAnnoncesConducteurs().subscribe({
       next: (data: AnnonceTrajetDTO[]) => {
         this.annonces = data;
         this.filteredAnnonces = data;
         this.loading = false;
       },
-      error: (error: any) => {
+      error: (err) => {
         this.error = 'Erreur lors du chargement des annonces';
         this.loading = false;
-        console.error('Erreur:', error);
+        console.error(err);
       }
     });
   }
@@ -93,7 +91,6 @@ export class PubAnnince implements OnInit {
       this.filteredAnnonces = this.annonces;
       return;
     }
-
     this.filteredAnnonces = this.annonces.filter(annonce => {
       const etapes = Array.isArray(annonce.etapesIntermediaires) ? annonce.etapesIntermediaires.join(' ').toLowerCase() : '';
       return (
@@ -112,14 +109,43 @@ export class PubAnnince implements OnInit {
     return etapes.join(' → ');
   }
 
+  annulerModification(): void {
+    this.isEditModalVisible = false;
+    this.annonceEnCoursDeModification = null;
+  }
+
   modifierAnnonce(id: number): void {
+    console.log(`[DEBUG] modifierAnnonce called with id: ${id}`);
     const annonce = this.annonces.find(a => a.id === id);
+
     if (annonce) {
+      console.log('[DEBUG] Annonce found:', annonce);
       this.annonceEnCoursDeModification = { 
         ...annonce, 
         etapesIntermediairesString: annonce.etapesIntermediaires ? annonce.etapesIntermediaires.join(', ') : ''
       };
       this.isEditModalVisible = true;
+      console.log('[DEBUG] isEditModalVisible set to true. Modal should appear.');
+    } else {
+      console.error(`[DEBUG] Annonce with id: ${id} not found!`);
+    }
+  }
+
+  supprimerAnnonce(id: number): void {
+    if (confirm('Êtes-vous sûr de vouloir supprimer cette annonce ?')) {
+      this.loading = true;
+      this.error = null;
+      this.annonceService.deleteAnnonce(id).subscribe({
+        next: () => {
+          this.loading = false;
+          this.loadAnnonces();
+        },
+        error: (err) => {
+          this.error = 'Erreur lors de la suppression de l\'annonce';
+          this.loading = false;
+          console.error(err);
+        }
+      });
     }
   }
 
@@ -127,55 +153,25 @@ export class PubAnnince implements OnInit {
     if (this.annonceEnCoursDeModification) {
       this.loading = true;
       this.error = null;
-      
-      // Convert string back to array
-      const etapesArray = this.annonceEnCoursDeModification.etapesIntermediairesString
-        ? this.annonceEnCoursDeModification.etapesIntermediairesString.split(',').map(s => s.trim()).filter(Boolean)
-        : [];
-        
-      const annonceToUpdate: AnnonceTrajetDTO = {
-          ...this.annonceEnCoursDeModification,
-          etapesIntermediaires: etapesArray,
-      };
-      // remove the temporary string property
-      delete (annonceToUpdate as any).etapesIntermediairesString;
 
-      this.annonceService.updateAnnonce(annonceToUpdate.id, annonceToUpdate).subscribe({
+      // Convertir la chaîne des étapes en tableau
+      this.annonceEnCoursDeModification.etapesIntermediaires =
+        this.annonceEnCoursDeModification.etapesIntermediairesString
+          ?.split(',')
+          .map((e: string) => e.trim())
+          .filter((e: string) => e.length > 0) || [];
+
+      this.annonceService.updateAnnonce(this.annonceEnCoursDeModification.id, this.annonceEnCoursDeModification).subscribe({
         next: () => {
           this.loading = false;
           this.isEditModalVisible = false;
           this.annonceEnCoursDeModification = null;
           this.loadAnnonces();
         },
-        error: (error: any) => {
-          console.error('Erreur lors de la modification:', error);
+        error: (err) => {
           this.error = 'Erreur lors de la modification de l\'annonce';
           this.loading = false;
-        }
-      });
-    }
-  }
-
-  annulerModification(): void {
-    this.isEditModalVisible = false;
-    this.annonceEnCoursDeModification = null;
-  }
-
-  supprimerAnnonce(id: number): void {
-    if (confirm('Êtes-vous sûr de vouloir supprimer cette annonce ?')) {
-      this.loading = true;
-      this.error = null;
-      
-      this.annonceService.deleteAnnonce(id).subscribe({
-        next: () => {
-          console.log('Annonce supprimée avec succès');
-          this.loading = false;
-          this.loadAnnonces();
-        },
-        error: (error: any) => {
-          console.error('Erreur lors de la suppression:', error);
-          this.error = 'Erreur lors de la suppression de l\'annonce';
-          this.loading = false;
+          console.error(err);
         }
       });
     }
