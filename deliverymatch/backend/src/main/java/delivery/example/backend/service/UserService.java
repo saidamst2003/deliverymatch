@@ -88,6 +88,11 @@ public class UserService {
         if (authenticatedUser == null) {
             throw new PasswordIncorrectException("User not found after authentication (this should not happen).");
         }
-        return userMapper.toDTO(authenticatedUser);
+        return new AuthUserDTO(
+            authenticatedUser.getId(),
+            authenticatedUser.getFullName(),
+            authenticatedUser.getEmail(),
+                authenticatedUser.getRole()
+        );
     }
 }
