@@ -1,9 +1,36 @@
 <div class="pub-header">
-  <h2> Annonces Conducteurs</h2>
+  <h2>Annonces Conducteurs</h2>
   <a class="btn-create" [routerLink]="['/dashboard']">
     <i class="fa fa-plus"></i> Nouvelle annonce
   </a>
 </div>
+
+<form [formGroup]="searchForm" (ngSubmit)="onAdvancedSearch()" class="search-form">
+  <div class="form-row">
+    <div class="form-group">
+      <label for="destination">Destination</label>
+      <input id="destination" type="text" formControlName="destination" placeholder="Ex: Rabat">
+    </div>
+
+    <div class="form-group">
+      <label for="dateCreation">Date</label>
+      <input id="dateCreation" type="date" formControlName="dateCreation">
+    </div>
+
+    <div class="form-group">
+      <label for="typeMarchandise">Type de Marchandise</label>
+      <select id="typeMarchandise" formControlName="typeMarchandise">
+        <option value="">Tous</option>
+        <option *ngFor="let type of typesMarchandise" [value]="type">{{ type }}</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <button type="submit" class="btn btn-primary">Rechercher</button>
+    <button type="button" (click)="resetSearch()" class="btn btn-secondary">Réinitialiser</button>
+  </div>
+</form>
 
 <div *ngIf="loading" class="loading">
   <div class="spinner"></div>
@@ -11,16 +38,15 @@
 </div>
 
 <div *ngIf="error" class="error-message">
-  <i class="fa fa-exclamation-triangle"></i>
-  {{ error }}
+  <i class="fa fa-exclamation-triangle"></i> {{ error }}
 </div>
 
 <div *ngIf="!loading && !error" class="pub-list">
-  <div *ngIf="annonces.length === 0" class="no-data">
-    <p>Aucune annonce de conducteur trouvée.</p>
+  <div *ngIf="filteredAnnonces.length === 0" class="no-data">
+    <p>Aucune annonce trouvée</p>
   </div>
 
-  <div *ngFor="let annonce of annonces" class="pub-card">
+  <div *ngFor="let annonce of filteredAnnonces" class="pub-card">
     <div class="pub-card-header">
       <span class="pub-id">#{{ annonce.id }}</span>
       <span class="pub-date">{{ formatDate(annonce.dateCreation) }}</span>
@@ -34,50 +60,43 @@
       <div><strong>Capacité:</strong> {{ annonce.capaciteDisponible }} kg</div>
       <div><strong>Type marchandise:</strong> {{ annonce.typeMarchandiseAcceptee }}</div>
     </div>
-    <div class="pub-card-actions" *ngIf="userRole && userRole.toUpperCase() === 'ADMIN'">
-      <button class="btn-edit" (click)="modifierAnnonce(annonce.id)">
+    <div class="annonce-actions" *ngIf="userRole && userRole.toUpperCase().includes('ADMIN')">
+      <button class="btn btn-primary" (click)="modifierAnnonce(annonce.id)">
         <i class="fa fa-edit"></i> Modifier
       </button>
-      <button class="btn-delete" (click)="supprimerAnnonce(annonce.id)">
+      <button class="btn btn-danger" (click)="supprimerAnnonce(annonce.id)">
         <i class="fa fa-trash"></i> Supprimer
       </button>
+
+
     </div>
   </div>
 </div>
 
-<!-- Modal de modification -->
-<div *ngIf="isEditModalVisible" class="modal-overlay">
-  <div class="modal-content">
-    <h2>Modifier l'annonce</h2>
+<!-- ✅ Modal Modification -->
+<div class="modal-backdrop" *ngIf="isEditModalVisible">
+  <div class="modal">
+    <h3>Modifier Annonce</h3>
+
     <form *ngIf="annonceEnCoursDeModification" (ngSubmit)="sauvegarderModification()">
-      <div class="form-group">
-        <label for="lieuDepart">Lieu de départ</label>
-        <input type="text" id="lieuDepart" [(ngModel)]="annonceEnCoursDeModification.lieuDepart" name="lieuDepart" required>
-      </div>
-      <div class="form-group">
-        <label for="destination">Destination</label>
-        <input type="text" id="destination" [(ngModel)]="annonceEnCoursDeModification.destination" name="destination" required>
-      </div>
-      <div class="form-group">
-        <label for="etapesIntermediaires">Étapes intermédiaires (séparées par des virgules)</label>
-        <input type="text" id="etapesIntermediaires" [(ngModel)]="annonceEnCoursDeModification.etapesIntermediaires" name="etapesIntermediaires">
-      </div>
-      <div class="form-group">
-        <label for="capaciteDisponible">Capacité disponible</label>
-        <input type="number" id="capaciteDisponible" [(ngModel)]="annonceEnCoursDeModification.capaciteDisponible" name="capaciteDisponible" required>
-      </div>
-      <div class="form-group">
-        <label for="typeMarchandiseAcceptee">Type de marchandise acceptée</label>
-        <input type="text" id="typeMarchandiseAcceptee" [(ngModel)]="annonceEnCoursDeModification.typeMarchandiseAcceptee" name="typeMarchandiseAcceptee" required>
-      </div>
+      <label>Départ:</label>
+      <input type="text" [(ngModel)]="annonceEnCoursDeModification.lieuDepart" name="lieuDepart" required />
+
+      <label>Étapes (séparées par virgule):</label>
+      <input type="text" [(ngModel)]="annonceEnCoursDeModification.etapesIntermediairesString" name="etapes" />
+
+      <label>Destination:</label>
+      <input type="text" [(ngModel)]="annonceEnCoursDeModification.destination" name="destination" required />
+
+      <label>Capacité (kg):</label>
+      <input type="number" [(ngModel)]="annonceEnCoursDeModification.capaciteDisponible" name="capacite" required />
+
+      <label>Type Marchandise:</label>
+      <input type="text" [(ngModel)]="annonceEnCoursDeModification.typeMarchandiseAcceptee" name="type" required />
+
       <div class="modal-actions">
-        <button type="submit" class="btn btn-primary">Sauvegarder</button>
+        <button type="submit" class="btn btn-success">Enregistrer</button>
         <button type="button" class="btn btn-secondary" (click)="annulerModification()">Annuler</button>
-      </div>
-      <div class="form-group" style="text-align: right; margin-top: 10px;">
-        <button class="btn btn-info" type="button" routerLink="/affichage-annonce">
-          <i class="fa fa-list"></i> Voir toutes les annonces
-        </button>
       </div>
     </form>
   </div>

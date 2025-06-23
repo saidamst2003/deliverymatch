@@ -24,4 +24,20 @@ export class AnnonceService {
     const url = `http://localhost:8081/api/annonces-trajet/admin/annonces-conducteurs/${id}`;
     return this.http.put<AnnonceTrajetDTO>(url, annonce);
   }
+
+  searchAnnonces(criteria: { destination?: string; dateCreation?: string; typeMarchandise?: string }): Observable<AnnonceTrajetDTO[]> {
+    let params: { [key: string]: string } = {};
+
+    if (criteria.destination) {
+      params['destination'] = criteria.destination;
+    }
+    if (criteria.dateCreation) {
+      params['dateCreation'] = criteria.dateCreation;
+    }
+    if (criteria.typeMarchandise) {
+      params['typeMarchandise'] = criteria.typeMarchandise;
+    }
+
+    return this.http.get<AnnonceTrajetDTO[]>(`${this.baseUrl}/annonces-trajet/search`, { params });
+  }
 }
