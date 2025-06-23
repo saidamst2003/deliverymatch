@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AnnonceTrajetDTO } from "../../../models/AnnonceTrajetDTO";
 import { AnnonceService } from "../../../services/annonce";
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { Location } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
@@ -11,19 +12,31 @@ import { RouterModule } from '@angular/router';
   templateUrl: './pub-annince.html',
   styleUrls: ['./pub-annince.css'],
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule]
+  imports: [CommonModule, FormsModule, RouterModule, ReactiveFormsModule]
 })
 export class PubAnnince implements OnInit {
   annonces: AnnonceTrajetDTO[] = [];
   filteredAnnonces: AnnonceTrajetDTO[] = [];
-  searchTerm: string = '';
   loading = false;
   error: string | null = null;
   isEditModalVisible = false;
   annonceEnCoursDeModification: any = null;
   userRole: string | null = null;
+  
+  searchForm: FormGroup;
+  typesMarchandise = ['FRAGILE', 'LIQUIDE', 'ALIMENTAIRE', 'ELECTRONIQUE', 'VETEMENT', 'AUTRE'];
 
-  constructor(private annonceService: AnnonceService, private location: Location) {}
+  constructor(
+    private annonceService: AnnonceService, 
+    private location: Location,
+    private fb: FormBuilder
+  ) {
+    this.searchForm = this.fb.group({
+      destination: [''],
+      dateCreation: [''],
+      typeMarchandise: ['']
+    });
+  }
 
   ngOnInit(): void {
     this.userRole = this.getUserRole();
@@ -85,20 +98,29 @@ export class PubAnnince implements OnInit {
     this.loadAnnonces();
   }
 
-  onSearch(): void {
-    const term = this.searchTerm.toLowerCase();
-    if (!term) {
-      this.filteredAnnonces = this.annonces;
-      return;
-    }
-    this.filteredAnnonces = this.annonces.filter(annonce => {
-      const etapes = Array.isArray(annonce.etapesIntermediaires) ? annonce.etapesIntermediaires.join(' ').toLowerCase() : '';
-      return (
-        annonce.lieuDepart.toLowerCase().includes(term) ||
-        annonce.destination.toLowerCase().includes(term) ||
-        etapes.includes(term)
-      );
+  onAdvancedSearch(): void {
+    const criteria = this.searchForm.value;
+    this.loading = true;
+    this.annonceService.searchAnnonces(criteria).subscribe({
+      next: (data) => {
+        this.filteredAnnonces = data;
+        this.loading = false;
+      },
+      error: (err) => {
+        this.error = 'Erreur lors de la recherche.';
+        this.loading = false;
+        console.error(err);
+      }
     });
+  }
+
+  resetSearch(): void {
+    this.searchForm.reset({
+      destination: '',
+      dateCreation: '',
+      typeMarchandise: ''
+    });
+    this.filteredAnnonces = this.annonces;
   }
 
   formatDate(date: Date): string {

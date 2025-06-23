@@ -5,12 +5,32 @@
   </a>
 </div>
 
-<div class="search-container">
-  <div class="search-wrapper">
-    <i class="fa fa-search search-icon"></i>
-    <input type="text" placeholder="Rechercher par départ, destination, étapes..." [(ngModel)]="searchTerm" (input)="onSearch()">
+<form [formGroup]="searchForm" (ngSubmit)="onAdvancedSearch()" class="search-form">
+  <div class="form-row">
+    <div class="form-group">
+      <label for="destination">Destination</label>
+      <input id="destination" type="text" formControlName="destination" placeholder="Ex: Rabat">
+    </div>
+
+    <div class="form-group">
+      <label for="dateCreation">Date</label>
+      <input id="dateCreation" type="date" formControlName="dateCreation">
+    </div>
+
+    <div class="form-group">
+      <label for="typeMarchandise">Type de Marchandise</label>
+      <select id="typeMarchandise" formControlName="typeMarchandise">
+        <option value="">Tous</option>
+        <option *ngFor="let type of typesMarchandise" [value]="type">{{ type }}</option>
+      </select>
+    </div>
   </div>
-</div>
+
+  <div class="form-actions">
+    <button type="submit" class="btn btn-primary">Rechercher</button>
+    <button type="button" (click)="resetSearch()" class="btn btn-secondary">Réinitialiser</button>
+  </div>
+</form>
 
 <div *ngIf="loading" class="loading">
   <div class="spinner"></div>
