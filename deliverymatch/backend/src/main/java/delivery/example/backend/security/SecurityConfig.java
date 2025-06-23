@@ -51,7 +51,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers(
                                 "/user/login",
-                                "/user/register"
+                                "/user/register",
+                                "/user/register/**"
                         )
                         .permitAll()
                         .requestMatchers("/api/annonces-trajet/publier/**").hasRole("CONDUCTEUR")
