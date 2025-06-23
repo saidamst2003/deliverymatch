@@ -420,7 +420,17 @@ html, body {
   transition: background 0.2s, color 0.2s, transform 0.2s;
 }
 .btn-delete:hover {
-  background: #c82333;
+  background-color: #c82333;
+  border-color: #bd2130;
+}
+
+.btn-info {
+  background-color: var(--khaki);
+  color: #333;
+}
+
+.btn-info:hover {
+  background-color: #A9A47A;
 }
 
 @keyframes fadeInCard {
@@ -431,4 +441,52 @@ html, body {
 /* Remove background from .pub-list and .annonces-container if present */
 .pub-list, .annonces-container {
   background: none !important;
+}
+
+/* Search Bar Styles */
+.search-container {
+  margin: 20px 0;
+  display: flex;
+  justify-content: center;
+}
+
+.search-wrapper {
+  position: relative;
+  width: 60%;
+}
+
+.search-wrapper .search-icon {
+  position: absolute;
+  top: 50%;
+  left: 15px;
+  transform: translateY(-50%);
+  color: #888;
+  font-size: 16px;
+}
+
+.search-wrapper input {
+  width: 100%;
+  padding: 12px 20px 12px 40px; /* Add padding for icon */
+  border: 1px solid #ccc;
+  border-radius: 25px;
+  font-size: 16px;
+  background-color: rgba(144, 238, 144, 0.2); /* Transparent green */
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.search-wrapper input:focus {
+  outline: none;
+  border-color: #8A9A5B; /* Moss Green from your palette */
+  background-color: rgba(144, 238, 144, 0.3);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.search-wrapper input::placeholder {
+  color: #888;
+}
+
+@keyframes fadeInCard {
+  from { opacity: 0; transform: translateY(30px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
 }

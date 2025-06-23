@@ -5,6 +5,18 @@
   </a>
 </div>
 
+<div class="search-container">
+  <div class="search-wrapper">
+    <i class="fa fa-search search-icon"></i>
+    <input
+      type="text"
+      placeholder="Rechercher par départ, destination, étapes..."
+      [(ngModel)]="searchTerm"
+      (input)="onSearch()"
+    >
+  </div>
+</div>
+
 <div *ngIf="loading" class="loading">
   <div class="spinner"></div>
   <p>Chargement des annonces...</p>
@@ -16,11 +28,11 @@
 </div>
 
 <div *ngIf="!loading && !error" class="pub-list">
-  <div *ngIf="annonces.length === 0" class="no-data">
-    <p>Aucune annonce de conducteur trouvée.</p>
+  <div *ngIf="filteredAnnonces.length === 0" class="no-data">
+    <p *ngIf="filteredAnnonces.length === 0">Aucune annonce trouvée</p>
   </div>
 
-  <div *ngFor="let annonce of annonces" class="pub-card">
+  <div *ngFor="let annonce of filteredAnnonces" class="pub-card">
     <div class="pub-card-header">
       <span class="pub-id">#{{ annonce.id }}</span>
       <span class="pub-date">{{ formatDate(annonce.dateCreation) }}</span>
@@ -34,16 +46,17 @@
       <div><strong>Capacité:</strong> {{ annonce.capaciteDisponible }} kg</div>
       <div><strong>Type marchandise:</strong> {{ annonce.typeMarchandiseAcceptee }}</div>
     </div>
-    <div class="pub-card-actions" *ngIf="userRole && userRole.toUpperCase() === 'ADMIN'">
-      <button class="btn-edit" (click)="modifierAnnonce(annonce.id)">
+    <div class="annonce-actions">
+      <button class="btn btn-primary" (click)="modifierAnnonce(annonce.id)">
         <i class="fa fa-edit"></i> Modifier
       </button>
-      <button class="btn-delete" (click)="supprimerAnnonce(annonce.id)">
+      <button class="btn btn-danger" (click)="supprimerAnnonce(annonce.id)">
         <i class="fa fa-trash"></i> Supprimer
       </button>
     </div>
+    </div>
   </div>
-</div>
+
 
 <!-- Modal de modification -->
 <div *ngIf="isEditModalVisible" class="modal-overlay">

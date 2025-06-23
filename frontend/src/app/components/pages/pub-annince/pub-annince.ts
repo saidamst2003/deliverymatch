@@ -15,6 +15,8 @@ import { RouterModule } from '@angular/router';
 })
 export class PubAnnince implements OnInit {
   annonces: AnnonceTrajetDTO[] = [];
+  filteredAnnonces: AnnonceTrajetDTO[] = [];
+  searchTerm: string = '';
   loading = false;
   error: string | null = null;
   isEditModalVisible = false;
@@ -25,10 +27,9 @@ export class PubAnnince implements OnInit {
 
   ngOnInit(): void {
     this.userRole = this.getUserRole();
-    console.log('Rôle de l\'utilisateur:', this.userRole);
+    console.log('User role in pub-annince:', this.userRole);
     this.loadAnnonces();
-  }
-
+}
   getUserRole(): string | null {
     try {
       const token = localStorage.getItem('token');
@@ -37,8 +38,10 @@ export class PubAnnince implements OnInit {
         return null;
       }
       const payload = JSON.parse(atob(token.split('.')[1]));
-      console.log('JWT Payload:', payload);
-      return payload.role || payload.roles?.[0] || null;
+      console.log('JWT Payload in pub-annince:', payload);
+      const role = payload.role || payload.roles?.[0] || null;
+      console.log('Extracted role in pub-annince:', role);
+      return role;
     } catch (e) {
       console.error('Erreur lors du décodage du token:', e);
       return null;
@@ -52,6 +55,7 @@ export class PubAnnince implements OnInit {
     this.annonceService.getAllAnnoncesConducteurs().subscribe({
       next: (data: AnnonceTrajetDTO[]) => {
         this.annonces = data;
+        this.filteredAnnonces = data;
         this.loading = false;
       },
       error: (error: any) => {
@@ -66,6 +70,23 @@ export class PubAnnince implements OnInit {
     this.loadAnnonces();
   }
 
+  onSearch(): void {
+    const term = this.searchTerm.toLowerCase();
+    if (!term) {
+      this.filteredAnnonces = this.annonces;
+      return;
+    }
+
+    this.filteredAnnonces = this.annonces.filter(annonce => {
+      const etapes = Array.isArray(annonce.etapesIntermediaires) ? annonce.etapesIntermediaires.join(' ').toLowerCase() : '';
+      return (
+        annonce.lieuDepart.toLowerCase().includes(term) ||
+        annonce.destination.toLowerCase().includes(term) ||
+        etapes.includes(term)
+      );
+    });
+  }
+
   formatDate(date: Date): string {
     return new Date(date).toLocaleDateString('fr-FR');
   }
@@ -74,20 +95,13 @@ export class PubAnnince implements OnInit {
     return etapes.join(' → ');
   }
 
-  modifierAnnonce(id: number): void {
-    const annonce = this.annonces.find(a => a.id === id);
-    if (annonce) {
-      // Create a copy to avoid modifying the original object directly
-      this.annonceEnCoursDeModification = { ...annonce };
-      this.isEditModalVisible = true;
-    }
-  }
+
 
   sauvegarderModification(): void {
     if (this.annonceEnCoursDeModification) {
       this.loading = true;
       this.error = null;
-      
+
       this.annonceService.updateAnnonce(this.annonceEnCoursDeModification.id, this.annonceEnCoursDeModification).subscribe({
         next: () => {
           this.loading = false;
@@ -109,11 +123,16 @@ export class PubAnnince implements OnInit {
     this.annonceEnCoursDeModification = null;
   }
 
+  modifierAnnonce(id: number): void {
+    console.log('Modifier annonce avec ID:', id);
+
+  }
+
   supprimerAnnonce(id: number): void {
     if (confirm('Êtes-vous sûr de vouloir supprimer cette annonce ?')) {
       this.loading = true;
       this.error = null;
-      
+
       this.annonceService.deleteAnnonce(id).subscribe({
         next: () => {
           console.log('Annonce supprimée avec succès');
@@ -130,7 +149,12 @@ export class PubAnnince implements OnInit {
     }
   }
 
+
+
+
   goBack(): void {
     this.location.back();
   }
 }
+
+

@@ -115,8 +115,9 @@
         </button>
       </div>
       <div class="flex flex-col items-end mt-2">
-        <a class="px-4 py-2 text-sm font-bold rounded-lg transition-transform transform hover:scale-105 bg-blue-700 text-white flex items-center"
-           [routerLink]="['/pub']" (click)="logVoirAnnonces()">
+        <a class="px-4 py-2 text-sm font-bold rounded-lg transition-transform transform hover:scale-105 flex items-center"
+           [routerLink]="['/pub']" (click)="logVoirAnnonces()"
+           style="background-color: #BCB88A; color: #333;">
           <i class="fa fa-list"></i> Voir toutes les annonces
         </a>
       </div>
@@ -130,5 +131,60 @@
       {{errorMessage}}
     </div>
 
+  </div>
+
+  <!-- Section to display all announcements -->
+  <div class="bg-[#014421]/60 backdrop-blur-sm rounded-xl shadow-2xl max-w-2xl mx-auto p-6 text-white mt-8">
+    <h2 class="text-xl font-bold mb-4" style="color: #BCB88A;">Toutes les annonces</h2>
+
+    <div *ngIf="isLoadingAnnonces" class="text-center">
+      <p>Chargement des annonces...</p>
+    </div>
+
+    <div *ngIf="errorAnnonces" class="text-red-400">
+      {{ errorAnnonces }}
+    </div>
+
+    <div *ngIf="!isLoadingAnnonces && !errorAnnonces && annonces.length > 0" class="space-y-4">
+      <!-- Debug info -->
+      <div class="text-xs text-gray-400 mb-2">
+        Debug: userRole = "{{ userRole }}", isAdmin = {{ userRole && userRole.toUpperCase() === 'ADMIN' }}
+      </div>
+      
+      <div *ngFor="let annonce of annonces" class="p-4 rounded-lg" style="background-color: #355E3B;">
+        <div class="flex justify-between items-center mb-2">
+          <h3 class="font-bold" style="color: #BCB88A;">Annonce #{{ annonce.id }}</h3>
+          <span class="text-xs text-gray-300">{{ formatDate(annonce.dateCreation) }}</span>
+        </div>
+        <div class="text-sm space-y-1">
+          <p><strong>Départ:</strong> {{ annonce.lieuDepart }}</p>
+          <p><strong>Destination:</strong> {{ annonce.destination }}</p>
+          <p *ngIf="annonce.etapesIntermediaires && annonce.etapesIntermediaires.length > 0">
+            <strong>Étapes:</strong> {{ formatEtapes(annonce.etapesIntermediaires) }}
+          </p>
+          <p><strong>Capacité:</strong> {{ annonce.capaciteDisponible }} kg</p>
+          <p><strong>Marchandise:</strong> {{ annonce.typeMarchandiseAcceptee }}</p>
+        </div>
+        <!-- Admin buttons -->
+        <div *ngIf="userRole === 'ADMIN' || userRole === 'admin'" class="flex justify-end space-x-2 mt-3 pt-3 border-t border-gray-600">
+          <button class="px-3 py-1 text-xs font-semibold rounded-md transition-colors flex items-center space-x-1"
+                  (click)="modifierAnnonce(annonce.id)"
+                  style="background-color: #8A9A5B; color: #013220;">
+            <i class="fa fa-edit"></i>
+            <span>Modifier</span>
+          </button>
+          <button class="px-3 py-1 text-xs font-semibold rounded-md transition-colors flex items-center space-x-1"
+                  (click)="supprimerAnnonce(annonce.id)"
+                  style="background-color: #BCB88A; color: #333;">
+            <i class="fa fa-trash"></i>
+            <span>Supprimer</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="!isLoadingAnnonces && annonces.length === 0" class="text-center text-gray-400">
+      <p>Aucune annonce à afficher pour le moment.</p>
+    </div>
   </div>
 </div>
