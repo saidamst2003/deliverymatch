@@ -1,0 +1,39 @@
+<form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
+  <h2>Créer un compte</h2>
+  <div class="form-group">
+    <label for="fullName">Nom complet</label>
+    <input id="fullName" type="text" formControlName="fullName" placeholder="Votre nom complet" required>
+    <div *ngIf="registerForm.get('fullName')?.touched && registerForm.get('fullName')?.invalid" class="error">
+      Le nom complet est requis.
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="email">Email</label>
+    <input id="email" type="email" formControlName="email" placeholder="Votre email" required>
+    <div *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.invalid" class="error">
+      Entrez un email valide.
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="password">Mot de passe</label>
+    <input id="password" type="password" formControlName="password" placeholder="Mot de passe" required>
+    <div *ngIf="registerForm.get('password')?.touched && registerForm.get('password')?.invalid" class="error">
+      Le mot de passe doit contenir au moins 6 caractères.
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="role">Rôle</label>
+    <select id="role" formControlName="role" required>
+      <option value="">Choisir un rôle</option>
+      <option value="ADMIN">Admin</option>
+      <option value="CONDUCTEUR">Conducteur</option>
+      <option value="EXPEDITEUR">Expéditeur</option>
+    </select>
+    <div *ngIf="registerForm.get('role')?.touched && registerForm.get('role')?.invalid" class="error">
+      Le rôle est requis.
+    </div>
+  </div>
+  <button type="submit" [disabled]="registerForm.invalid" class="btn btn-primary">S'inscrire</button>
+  <div *ngIf="successMessage" class="success">{{ successMessage }}</div>
+  <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+</form> 

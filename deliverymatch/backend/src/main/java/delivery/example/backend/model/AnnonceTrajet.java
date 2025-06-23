@@ -48,6 +48,7 @@ public class AnnonceTrajet {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "type_marchandise_acceptee")
+
     private TypeMarchandise typeMarchandiseAcceptee;
 
     // Relations
