@@ -15,7 +15,6 @@ import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.NoSuchElementException;
-
 @Service
 public class DemandeTransportService {
 
@@ -38,19 +37,15 @@ public class DemandeTransportService {
             throw new IllegalArgumentException("annonceTrajetId ne peut pas être null");
         }
 
-        // Récupérer l'email de l'utilisateur connecté via JWT
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        // Trouver l'expéditeur par email
         Expediteur expediteur = expediteurRepository.findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("Expéditeur non trouvé avec l'email: " + email));
 
-        // Trouver l'annonce de trajet
         AnnonceTrajet annonce = annonceTrajetRepository.findById(dto.annonceTrajetId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         "Annonce avec id " + dto.annonceTrajetId() + " non trouvée"));
 
-        // Création de la demande
         DemandeTransport demande = new DemandeTransport();
         demande.setExpediteur(expediteur);
         demande.setAnnonceTrajet(annonce);
@@ -71,8 +66,9 @@ public class DemandeTransportService {
 
     public DemandeTransport getDemandeById(Integer id) {
         return demandeTransportRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Demande non trouvée avec id " + id));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Demande non trouvée avec id " + id));
     }
+
 
     public DemandeTransport updateDemande(Integer id, DemandeTransport updatedDemande) {
         DemandeTransport existing = getDemandeById(id);

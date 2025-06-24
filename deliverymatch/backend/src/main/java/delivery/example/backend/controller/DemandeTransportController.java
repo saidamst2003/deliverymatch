@@ -4,10 +4,12 @@ import delivery.example.backend.dto.DemandeTransportDto;
 import delivery.example.backend.model.DemandeTransport;
 import delivery.example.backend.service.DemandeTransportService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api/demandes")
@@ -27,6 +29,7 @@ public class DemandeTransportController {
     }
 
     // Récupérer les demandes par ID d'expéditeur
+
     @GetMapping("/expediteur/{expediteurId}")
     public ResponseEntity<List<DemandeTransport>> getDemandesByExpediteur(@PathVariable Integer expediteurId) {
         List<DemandeTransport> demandes = demandeTransportService.getDemandesByExpediteur(expediteurId);
@@ -34,11 +37,16 @@ public class DemandeTransportController {
     }
 
     // Récupérer une demande par ID
-    @GetMapping("/{id}")
+    @GetMapping("/demandes/{id}")
     public ResponseEntity<DemandeTransport> getDemandeById(@PathVariable Integer id) {
-        DemandeTransport demande = demandeTransportService.getDemandeById(id);
-        return ResponseEntity.ok(demande);
+        try {
+            DemandeTransport demande = demandeTransportService.getDemandeById(id);
+            return ResponseEntity.ok(demande);
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
+
 
     // Mettre à jour une demande
     @PutMapping("/{id}")
