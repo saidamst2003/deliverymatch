@@ -4,8 +4,6 @@ import delivery.example.backend.dto.DemandeTransportDto;
 import delivery.example.backend.model.DemandeTransport;
 import delivery.example.backend.service.DemandeTransportService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,43 +13,44 @@ import java.util.List;
 @RequestMapping("/api/demandes")
 public class DemandeTransportController {
 
-    @Autowired
-    private DemandeTransportService demandeService;
+    private final DemandeTransportService demandeTransportService;
 
-    // Crée une nouvelle demande de transport aveec colis
+    public DemandeTransportController(DemandeTransportService demandeTransportService) {
+        this.demandeTransportService = demandeTransportService;
+    }
+
+    // Créer une nouvelle demande de transport avec colis
     @PostMapping
-
-    public ResponseEntity<DemandeTransport> createDemande(@RequestBody DemandeTransportDto dto) {
-        DemandeTransport demande = demandeService.createDemande(dto);
+    public ResponseEntity<DemandeTransport> createDemande(@Valid @RequestBody DemandeTransportDto dto) {
+        DemandeTransport demande = demandeTransportService.createDemande(dto);
         return ResponseEntity.ok(demande);
     }
 
-
-    // Récupère les demandes de transport par ID d'expéditeur
+    // Récupérer les demandes par ID d'expéditeur
     @GetMapping("/expediteur/{expediteurId}")
     public ResponseEntity<List<DemandeTransport>> getDemandesByExpediteur(@PathVariable Integer expediteurId) {
-        List<DemandeTransport> demandes = demandeService.getDemandesByExpediteur(expediteurId);
+        List<DemandeTransport> demandes = demandeTransportService.getDemandesByExpediteur(expediteurId);
         return ResponseEntity.ok(demandes);
     }
 
-    // Récupère une demande de transport par son ID
+    // Récupérer une demande par ID
     @GetMapping("/{id}")
     public ResponseEntity<DemandeTransport> getDemandeById(@PathVariable Integer id) {
-        DemandeTransport demande = demandeService.getDemandeById(id);
+        DemandeTransport demande = demandeTransportService.getDemandeById(id);
         return ResponseEntity.ok(demande);
     }
 
-    // Met à jour une demande de transport existante
+    // Mettre à jour une demande
     @PutMapping("/{id}")
     public ResponseEntity<DemandeTransport> updateDemande(@PathVariable Integer id, @RequestBody DemandeTransport demande) {
-        DemandeTransport updated = demandeService.updateDemande(id, demande);
+        DemandeTransport updated = demandeTransportService.updateDemande(id, demande);
         return ResponseEntity.ok(updated);
     }
 
-    // Supprime une demande de transport par son ID
+    // Supprimer une demande
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteDemande(@PathVariable Integer id) {
-        demandeService.deleteDemande(id);
+        demandeTransportService.deleteDemande(id);
         return ResponseEntity.noContent().build();
     }
 }

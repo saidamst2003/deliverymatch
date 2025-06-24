@@ -14,6 +14,5 @@ public record DemandeTransportDto(
         TypeColis typeColis,
         StatusDemande statut,
         LocalDate dateDemande,
-        Integer expediteurId,
         Integer annonceTrajetId
 ) {}

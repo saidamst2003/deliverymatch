@@ -5,38 +5,52 @@ import delivery.example.backend.model.*;
 import delivery.example.backend.repository.AnnonceTrajetRepository;
 import delivery.example.backend.repository.DemandeTransportRepository;
 import delivery.example.backend.repository.ExpediteurRepository;
+
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 
 @Service
 public class DemandeTransportService {
 
-    @Autowired
-    private DemandeTransportRepository demandeTransportRepository;
+    private final DemandeTransportRepository demandeTransportRepository;
+    private final ExpediteurRepository expediteurRepository;
+    private final AnnonceTrajetRepository annonceTrajetRepository;
 
-    @Autowired
-    private ExpediteurRepository expediteurRepository;
+    public DemandeTransportService(
+            DemandeTransportRepository demandeTransportRepository,
+            ExpediteurRepository expediteurRepository,
+            AnnonceTrajetRepository annonceTrajetRepository
+    ) {
+        this.demandeTransportRepository = demandeTransportRepository;
+        this.expediteurRepository = expediteurRepository;
+        this.annonceTrajetRepository = annonceTrajetRepository;
+    }
 
-    @Autowired
-    private AnnonceTrajetRepository annonceTrajetRepository;
     public DemandeTransport createDemande(DemandeTransportDto dto) {
-        if (dto.expediteurId() == null) {
-            throw new IllegalArgumentException("expediteurId ne peut pas être null");
-        }
         if (dto.annonceTrajetId() == null) {
             throw new IllegalArgumentException("annonceTrajetId ne peut pas être null");
         }
-        Expediteur expediteur = expediteurRepository.findById(Long.valueOf(dto.expediteurId()))
-                .orElseThrow(() -> new EntityNotFoundException("Expediteur non trouvé"));
-        AnnonceTrajet annonce = annonceTrajetRepository.findById(dto.annonceTrajetId())
-                .orElseThrow(() -> new EntityNotFoundException("Annonce non trouvée"));
 
+        // Récupérer l'email de l'utilisateur connecté via JWT
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        // Trouver l'expéditeur par email
+        Expediteur expediteur = expediteurRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("Expéditeur non trouvé avec l'email: " + email));
+
+        // Trouver l'annonce de trajet
+        AnnonceTrajet annonce = annonceTrajetRepository.findById(dto.annonceTrajetId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Annonce avec id " + dto.annonceTrajetId() + " non trouvée"));
+
+        // Création de la demande
         DemandeTransport demande = new DemandeTransport();
         demande.setExpediteur(expediteur);
         demande.setAnnonceTrajet(annonce);
@@ -48,11 +62,8 @@ public class DemandeTransportService {
         demande.setDateDemande(LocalDate.now());
         demande.setStatut(dto.statut() != null ? dto.statut() : StatusDemande.EN_ATTENTE);
 
-
-
         return demandeTransportRepository.save(demande);
     }
-
 
     public List<DemandeTransport> getDemandesByExpediteur(Integer expediteurId) {
         return demandeTransportRepository.findByExpediteur_Id(Long.valueOf(expediteurId));
