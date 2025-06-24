@@ -1,13 +1,12 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { RouterOutlet, Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { NavbarComponent } from '../../parcials/navbar/navbar';
-import { Sidebar } from '../../parcials/sidebar/sidebar';
 import { filter, map } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-layout',
-  imports: [CommonModule, Sidebar, NavbarComponent, RouterOutlet],
+  imports: [CommonModule, NavbarComponent, RouterOutlet],
   templateUrl: './layout.html',
   styleUrl: './layout.css',
 })
